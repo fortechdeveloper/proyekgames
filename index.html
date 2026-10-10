@@ -4,9 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
 <meta name="theme-color" content="#0a1e3d" />
-<meta name="description" content="GamehubFortechdev — kumpulan mini game mobile: Snake, 2048, Breakout. Dibuat oleh FortechDev." />
-<meta name="author" content="FortechDev" />
-<title>GamehubFortechdev — by FortechDev</title>
+<title>GamehubFortechdev</title>
 
 <link
   rel="stylesheet"
@@ -18,31 +16,20 @@
 
 <style>
 /* =========================================================
-   GAMEHUBFORTECHDEV — LIQUID GLASS EDITION
-   - Video background fully visible
-   - Frosted glass panels (limited blur for performance)
-   - Mobile-first
+   GAMEHUBFORTECHDEV — Liquid Glass
    ========================================================= */
 
 :root{
   --blue-300:#9cc3fb;
   --blue-400:#6ba3f7;
-  --blue-500:#3b82f6;
-  --blue-600:#2563eb;
-  --blue-700:#1d4ed8;
-  --ink:#0d2949;
-  --ink-2:#3c5f85;
   --ink-3:#7a93ad;
   --glass:rgba(255,255,255,.14);
-  --glass-strong:rgba(255,255,255,.22);
   --glass-border:rgba(255,255,255,.28);
-  --glass-hi:rgba(255,255,255,.55);
   --text:#f4f9ff;
   --text-dim:rgba(244,249,255,.72);
-  --text-soft:rgba(244,249,255,.55);
-  --radius-s:12px;
+  --text-soft:rgba(244,249,255,.52);
   --radius-m:18px;
-  --radius-l:26px;
+  --radius-l:24px;
   --ease:cubic-bezier(.22,.9,.28,1);
   --safe-t:env(safe-area-inset-top,0px);
   --safe-b:env(safe-area-inset-bottom,0px);
@@ -59,50 +46,37 @@ body{
   min-height:100vh;
   min-height:100dvh;
   overflow-x:hidden;
-  position:relative;
   line-height:1.5;
   -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
   overscroll-behavior-y:none;
 }
 img,svg,video,canvas{display:block;max-width:100%}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 a{color:inherit;text-decoration:none}
-ul{list-style:none}
 i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 
 /* =========================================================
-   VIDEO BACKGROUND — full visible
+   VIDEO BACKGROUND
    ========================================================= */
 .bg-video{
   position:fixed;
   inset:0;
-  width:100%;
-  height:100%;
+  width:100%;height:100%;
   object-fit:cover;
   z-index:-3;
   pointer-events:none;
 }
-
-/* Overlay tipis: cuma biar teks kebaca, video tetap kelihatan */
 .bg-tint{
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  pointer-events:none;
+  position:fixed;inset:0;
+  z-index:-2;pointer-events:none;
   background:
-    radial-gradient(120% 90% at 50% 0%, rgba(10,30,61,.20) 0%, rgba(10,30,61,.55) 60%, rgba(6,20,42,.80) 100%),
-    linear-gradient(180deg, rgba(15,40,80,.28) 0%, rgba(8,24,50,.45) 55%, rgba(6,18,38,.72) 100%);
+    radial-gradient(120% 90% at 50% 0%, rgba(10,30,61,.18) 0%, rgba(10,30,61,.52) 60%, rgba(6,20,42,.78) 100%),
+    linear-gradient(180deg, rgba(15,40,80,.26) 0%, rgba(8,24,50,.42) 55%, rgba(6,18,38,.70) 100%);
 }
-
-/* Vignette bawah — teks tetap kebaca */
 .bg-vignette{
-  position:fixed;
-  inset:0;
-  z-index:-1;
-  pointer-events:none;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.10) 0%, transparent 30%, transparent 65%, rgba(0,0,0,.35) 100%);
+  position:fixed;inset:0;
+  z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg, rgba(0,0,0,.10) 0%, transparent 30%, transparent 65%, rgba(0,0,0,.35) 100%);
 }
 
 /* =========================================================
@@ -111,14 +85,11 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 .shell{
   max-width:1100px;
   margin:0 auto;
-  padding:calc(var(--safe-t) + 22px) calc(var(--safe-r) + 18px) calc(var(--safe-b) + 40px) calc(var(--safe-l) + 18px);
+  padding:calc(var(--safe-t) + 22px) calc(var(--safe-r) + 18px) calc(var(--safe-b) + 32px) calc(var(--safe-l) + 18px);
   position:relative;
   z-index:1;
 }
 
-/* =========================================================
-   LIQUID GLASS — base class
-   ========================================================= */
 .glass{
   position:relative;
   background:var(--glass);
@@ -131,16 +102,12 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     inset 0 -1px 0 rgba(255,255,255,.06);
   contain:paint;
 }
-/* specular highlight di atas (kesan kaca cair) */
 .glass::before{
   content:"";
-  position:absolute;
-  left:0;right:0;top:0;
-  height:42%;
-  border-radius:inherit;
+  position:absolute;left:0;right:0;top:0;
+  height:42%;border-radius:inherit;
   background:linear-gradient(180deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,.04) 55%, transparent 100%);
-  pointer-events:none;
-  z-index:0;
+  pointer-events:none;z-index:0;
 }
 .glass > *{position:relative;z-index:1}
 
@@ -148,153 +115,53 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
    TOPBAR
    ========================================================= */
 .topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
+  display:flex;align-items:center;gap:11px;
   padding:10px 14px;
   border-radius:var(--radius-m);
-  margin-bottom:24px;
+  margin-bottom:32px;
 }
-.brand{display:flex;align-items:center;gap:11px;min-width:0}
 .brand-mark{
-  width:38px;height:38px;
-  border-radius:12px;
+  width:36px;height:36px;
+  border-radius:11px;
   display:grid;place-items:center;
   background:linear-gradient(135deg, rgba(107,163,247,.9), rgba(29,78,216,.9));
   box-shadow:
     0 6px 16px rgba(37,99,235,.45),
     inset 0 1px 0 rgba(255,255,255,.5),
     inset 0 -2px 6px rgba(0,0,0,.18);
-  flex:none;
-  color:#fff;
+  flex:none;color:#fff;
   border:1px solid rgba(255,255,255,.35);
 }
-.brand-mark i{font-size:16px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
-.brand-text{min-width:0}
+.brand-mark i{font-size:15px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
 .brand-title{
-  font-size:15px;font-weight:800;letter-spacing:-.2px;
+  font-size:14.5px;font-weight:800;letter-spacing:-.2px;
   color:#fff;
   text-shadow:0 1px 2px rgba(0,0,0,.35);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.brand-sub{
-  font-size:10.5px;color:var(--text-soft);font-weight:700;
-  letter-spacing:.5px;text-transform:uppercase;
-  text-shadow:0 1px 2px rgba(0,0,0,.30);
-}
-.chip{
-  font-size:11px;font-weight:800;letter-spacing:.5px;
-  padding:7px 12px;border-radius:999px;
-  background:rgba(255,255,255,.14);
-  border:1px solid rgba(255,255,255,.28);
-  color:#fff;
-  white-space:nowrap;flex:none;
-  display:inline-flex;align-items:center;gap:6px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.35);
-  backdrop-filter:blur(8px) saturate(1.4);
-  -webkit-backdrop-filter:blur(8px) saturate(1.4);
-}
-.chip i{font-size:10px;color:#ffe9a8}
 
 /* =========================================================
    HERO
    ========================================================= */
 .hero{
-  text-align:center;
-  padding:20px 6px 38px;
-}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  font-size:11px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;
-  padding:8px 16px;border-radius:999px;
-  background:rgba(255,255,255,.14);
-  border:1px solid rgba(255,255,255,.28);
-  color:#fff;
-  box-shadow:
-    0 4px 14px rgba(2,10,25,.30),
-    inset 0 1px 0 rgba(255,255,255,.40);
-  backdrop-filter:blur(10px) saturate(1.5);
-  -webkit-backdrop-filter:blur(10px) saturate(1.5);
-  margin-bottom:18px;
-  animation:fadeUp .6s var(--ease) both;
-}
-.hero-badge .dot{
-  width:7px;height:7px;border-radius:50%;
-  background:linear-gradient(135deg,#4ade80,#22c55e);
-  box-shadow:0 0 0 3px rgba(34,197,94,.22), 0 0 12px rgba(34,197,94,.55);
-  animation:pulse 2s ease-in-out infinite;
+  padding:8px 4px 32px;
 }
 .hero h1{
-  font-size:clamp(30px,8.5vw,56px);
-  line-height:1.06;
-  letter-spacing:-1.4px;
+  font-size:clamp(28px,7.5vw,44px);
+  line-height:1.1;
+  letter-spacing:-1.2px;
   font-weight:800;
   color:#fff;
-  margin-bottom:16px;
-  text-shadow:
-    0 2px 18px rgba(0,0,0,.45),
-    0 1px 3px rgba(0,0,0,.55);
-  animation:fadeUp .6s .05s var(--ease) both;
-}
-.hero h1 .grad{
-  background:linear-gradient(120deg,#c5ddfd 0%,#6ba3f7 45%,#9cc3fb 100%);
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;
-  display:inline-block;
-  filter:drop-shadow(0 2px 10px rgba(107,163,247,.45));
+  margin-bottom:14px;
+  text-shadow:0 2px 18px rgba(0,0,0,.45), 0 1px 3px rgba(0,0,0,.55);
+  animation:fadeUp .6s var(--ease) both;
 }
 .hero p{
   max-width:520px;
-  margin:0 auto;
-  font-size:clamp(14px,3.6vw,16.5px);
+  font-size:clamp(14px,3.4vw,15.5px);
   color:var(--text-dim);
-  line-height:1.7;
+  line-height:1.65;
   text-shadow:0 1px 3px rgba(0,0,0,.45);
-  animation:fadeUp .6s .1s var(--ease) both;
-}
-.hero-stats{
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  margin-top:24px;
-  animation:fadeUp .6s .15s var(--ease) both;
-}
-.stat{
-  padding:10px 16px;border-radius:14px;
-  min-width:82px;
-  text-align:center;
-}
-.stat b{
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  font-size:16px;font-weight:800;
-  color:#fff;
-  line-height:1.2;
-  text-shadow:0 1px 2px rgba(0,0,0,.4);
-}
-.stat b i{font-size:13px;color:#9cc3fb;opacity:.95}
-.stat span{
-  display:block;margin-top:3px;
-  font-size:10.5px;font-weight:700;letter-spacing:.5px;
-  text-transform:uppercase;
-  color:var(--text-soft);
-}
-
-/* =========================================================
-   SECTION HEAD
-   ========================================================= */
-.section-head{
-  display:flex;align-items:flex-end;justify-content:space-between;
-  gap:12px;margin:0 4px 16px;
-}
-.section-head h2{
-  font-size:18px;font-weight:800;letter-spacing:-.3px;
-  color:#fff;
-  display:flex;align-items:center;gap:9px;
-  text-shadow:0 1px 3px rgba(0,0,0,.45);
-}
-.section-head h2 i{color:#9cc3fb;font-size:15px;filter:drop-shadow(0 0 6px rgba(107,163,247,.6))}
-.section-head span{
-  font-size:11.5px;color:var(--text-soft);font-weight:700;
-  text-shadow:0 1px 2px rgba(0,0,0,.4);
+  animation:fadeUp .6s .06s var(--ease) both;
 }
 
 /* =========================================================
@@ -304,21 +171,20 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   display:grid;
   grid-template-columns:1fr;
   gap:14px;
-  margin-bottom:32px;
+  margin-bottom:24px;
 }
 @media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:940px){.grid{grid-template-columns:repeat(3,1fr)}}
 
 .card{
   position:relative;
-  display:block;
+  display:flex;flex-direction:column;
   border-radius:var(--radius-l);
-  padding:20px;
+  padding:22px;
   overflow:hidden;
   isolation:isolate;
-  transition:transform .4s var(--ease), box-shadow .4s var(--ease);
+  transition:transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease);
   animation:fadeUp .6s var(--ease) both;
-  /* glass base */
   background:rgba(255,255,255,.12);
   backdrop-filter:blur(14px) saturate(1.55);
   -webkit-backdrop-filter:blur(14px) saturate(1.55);
@@ -330,34 +196,25 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   contain:paint;
   -webkit-tap-highlight-color:transparent;
 }
-.card:nth-child(1){animation-delay:.18s}
-.card:nth-child(2){animation-delay:.24s}
-.card:nth-child(3){animation-delay:.30s}
+.card:nth-child(1){animation-delay:.10s}
+.card:nth-child(2){animation-delay:.16s}
+.card:nth-child(3){animation-delay:.22s}
 
-/* Specular highlight atas */
 .card::before{
   content:"";
-  position:absolute;
-  left:0;right:0;top:0;
-  height:45%;
-  border-radius:inherit;
+  position:absolute;left:0;right:0;top:0;
+  height:45%;border-radius:inherit;
   background:linear-gradient(180deg, rgba(255,255,255,.28) 0%, rgba(255,255,255,.06) 55%, transparent 100%);
-  pointer-events:none;
-  z-index:0;
+  pointer-events:none;z-index:0;
 }
-/* Tint aksen lembut */
 .card::after{
   content:"";
-  position:absolute;
-  top:-40%;right:-30%;
-  width:180px;height:180px;
-  border-radius:50%;
+  position:absolute;top:-40%;right:-30%;
+  width:180px;height:180px;border-radius:50%;
   background:radial-gradient(circle,var(--accent,rgba(107,163,247,.6)) 0%, transparent 70%);
-  opacity:.55;
-  filter:blur(20px);
+  opacity:.55;filter:blur(20px);
   transition:opacity .5s var(--ease), transform .6s var(--ease);
-  pointer-events:none;
-  z-index:0;
+  pointer-events:none;z-index:0;
 }
 .card > *{position:relative;z-index:1}
 
@@ -374,13 +231,9 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   .card:hover::after{opacity:.85;transform:scale(1.15) translate(-6px,6px)}
 }
 
-.card-top{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:16px;
-}
 .card-icon{
-  width:54px;height:54px;
-  border-radius:17px;
+  width:52px;height:52px;
+  border-radius:16px;
   display:grid;place-items:center;
   background:linear-gradient(140deg,var(--accent-a,#6ba3f7),var(--accent-b,#1d4ed8));
   box-shadow:
@@ -390,66 +243,47 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   transition:transform .5s var(--ease);
   color:#fff;
   border:1px solid rgba(255,255,255,.30);
+  margin-bottom:18px;
 }
-.card-icon i{font-size:23px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}
+.card-icon i{font-size:22px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}
 .card:active .card-icon{transform:rotate(-6deg) scale(.94)}
 @media(hover:hover){.card:hover .card-icon{transform:rotate(-8deg) scale(1.06)}}
 
-.card-tag{
-  font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;
-  padding:6px 11px;border-radius:999px;
-  background:rgba(255,255,255,.16);
-  color:#fff;
-  border:1px solid rgba(255,255,255,.30);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.35);
-  display:inline-flex;align-items:center;gap:5px;
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
-}
-.card-tag i{font-size:9px;color:#c5ddfd}
-
 .card h3{
-  font-size:18.5px;font-weight:800;letter-spacing:-.3px;
+  font-size:18px;font-weight:800;letter-spacing:-.3px;
   margin-bottom:6px;color:#fff;
   text-shadow:0 1px 3px rgba(0,0,0,.45);
 }
 .card p{
-  font-size:13.5px;line-height:1.6;
+  font-size:13px;line-height:1.6;
   color:var(--text-dim);
-  margin-bottom:16px;
+  margin-bottom:18px;
   text-shadow:0 1px 2px rgba(0,0,0,.35);
+  flex:1;
 }
-
 .card-foot{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  display:flex;align-items:center;justify-content:flex-end;
 }
-.card-meta{
-  display:flex;align-items:center;gap:7px;
-  font-size:11.5px;font-weight:700;
-  color:var(--text-soft);
-}
-.card-meta i{font-size:12px;color:var(--text-soft)}
-
 .card-play{
   display:inline-flex;align-items:center;gap:8px;
-  font-size:13px;font-weight:800;
-  padding:10px 16px;border-radius:12px;
+  font-size:12.5px;font-weight:800;
+  padding:9px 16px;border-radius:11px;
   color:#fff;
   background:linear-gradient(135deg,var(--accent-a,#6ba3f7),var(--accent-b,#1d4ed8));
   box-shadow:
     0 8px 20px -4px var(--accent-shadow,rgba(37,99,235,.7)),
     inset 0 1px 0 rgba(255,255,255,.45);
   border:1px solid rgba(255,255,255,.28);
-  transition:transform .3s var(--ease), box-shadow .3s var(--ease);
+  transition:transform .3s var(--ease);
 }
 .card:active .card-play{transform:scale(.95)}
-.card-play i{font-size:11px}
+.card-play i{font-size:10.5px}
 .card-play .fa-arrow-right{transition:transform .3s var(--ease)}
 @media(hover:hover){
   .card:hover .card-play .fa-arrow-right{transform:translateX(3px)}
 }
 
-/* accent variants */
+/* accents */
 .card[data-accent="snake"]{
   --accent-a:#4ade80; --accent-b:#0ea56b;
   --accent:rgba(34,197,94,.55);
@@ -467,42 +301,24 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 }
 
 /* =========================================================
-   FOOTER
+   FOOTER (minimal)
    ========================================================= */
 .footer{
   text-align:center;
-  padding:24px 10px 8px;
-  font-size:12px;
+  padding:20px 10px 4px;
+  font-size:11px;
   font-weight:600;
   color:var(--text-soft);
-  display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+  letter-spacing:.3px;
   text-shadow:0 1px 2px rgba(0,0,0,.4);
-}
-.footer b{color:#fff;font-weight:800}
-.footer i{font-size:11px;color:#9cc3fb}
-.footer .heart{
-  color:#ff5b6e;
-  filter:drop-shadow(0 0 8px rgba(255,91,110,.65));
-  animation:heartbeat 1.6s ease-in-out infinite;
-}
-@keyframes heartbeat{
-  0%,100%{transform:scale(1)}
-  20%{transform:scale(1.18)}
-  40%{transform:scale(1)}
-  60%{transform:scale(1.12)}
-  80%{transform:scale(1)}
 }
 
 /* =========================================================
-   ANIMATIONS (ringan)
+   ANIMATIONS
    ========================================================= */
 @keyframes fadeUp{
   from{opacity:0;transform:translateY(14px)}
   to{opacity:1;transform:translateY(0)}
-}
-@keyframes pulse{
-  0%,100%{opacity:1;transform:scale(1)}
-  50%{opacity:.55;transform:scale(.82)}
 }
 @keyframes ripple{
   from{transform:scale(0);opacity:.9}
@@ -518,19 +334,15 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   .card:hover{transform:none !important}
 }
 
-/* Fallback: kalau browser gak support backdrop-filter, pakai bg lebih solid */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
   .card{background:rgba(20,40,75,.62)}
-  .glass,.topbar,.stat,.hero-badge,.chip{background:rgba(20,40,75,.55)}
+  .topbar{background:rgba(20,40,75,.55)}
 }
 </style>
 </head>
 
 <body>
 
-<!-- =========================
-     VIDEO BACKGROUND
-     ========================= -->
 <video class="bg-video" autoplay muted loop playsinline preload="auto">
   <source src="./wp.mp4" type="video/mp4" />
   <source src="wp.mp4" type="video/mp4" />
@@ -539,83 +351,32 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 <div class="bg-tint"></div>
 <div class="bg-vignette"></div>
 
-<!-- =========================
-     MAIN CONTENT
-     ========================= -->
 <main class="shell">
 
-  <!-- ===== Topbar ===== -->
+  <!-- Topbar -->
   <header class="topbar glass">
-    <div class="brand">
-      <div class="brand-mark">
-        <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
-      </div>
-      <div class="brand-text">
-        <div class="brand-title">GamehubFortechdev</div>
-        <div class="brand-sub">by FortechDev</div>
-      </div>
+    <div class="brand-mark">
+      <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
     </div>
-    <span class="chip">
-      <i class="fa-solid fa-bolt" aria-hidden="true"></i>
-      v1.0
-    </span>
+    <div class="brand-title">GamehubFortechdev</div>
   </header>
 
-  <!-- ===== Hero ===== -->
+  <!-- Hero -->
   <section class="hero">
-    <span class="hero-badge">
-      <span class="dot"></span>
-      Online &amp; Siap Main
-    </span>
-    <h1>GamehubFortechdev<br><span class="grad">Main Tanpa Ribet.</span></h1>
-    <p>Kumpulan mini game klasik langsung di browser HP. Tanpa install, tanpa loading lama. Pilih game, geser jari, mainkan.</p>
-
-    <div class="hero-stats">
-      <div class="stat glass">
-        <b><i class="fa-solid fa-gamepad" aria-hidden="true"></i>3</b>
-        <span>Game</span>
-      </div>
-      <div class="stat glass">
-        <b><i class="fa-solid fa-gauge-high" aria-hidden="true"></i>60</b>
-        <span>FPS</span>
-      </div>
-      <div class="stat glass">
-        <b><i class="fa-solid fa-cloud-arrow-down" aria-hidden="true"></i>0</b>
-        <span>Install</span>
-      </div>
-    </div>
+    <h1>Pilih Game</h1>
+    <p>Tiga mini game klasik yang bisa langsung dimainkan di HP. Geser jari, mulai main.</p>
   </section>
 
-  <!-- ===== Section Heading ===== -->
-  <div class="section-head">
-    <h2>
-      <i class="fa-solid fa-list-ul" aria-hidden="true"></i>
-      Pilih Game
-    </h2>
-    <span>3 tersedia</span>
-  </div>
-
-  <!-- ===== Game Grid ===== -->
+  <!-- Grid -->
   <section class="grid">
 
-    <!-- ============ SNAKE ============ -->
     <a class="card" href="snake.html" data-accent="snake">
-      <div class="card-top">
-        <div class="card-icon">
-          <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
-        </div>
-        <span class="card-tag">
-          <i class="fa-solid fa-bolt" aria-hidden="true"></i>
-          Arcade
-        </span>
+      <div class="card-icon">
+        <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
       </div>
       <h3>Neon Snake</h3>
-      <p>Kendalikan ular, makan apel, dan jangan tabrak ekor sendiri. Makin panjang, makin cepat.</p>
+      <p>Makan apel, jangan tabrak ekor sendiri.</p>
       <div class="card-foot">
-        <span class="card-meta">
-          <i class="fa-solid fa-arrows-up-down-left-right" aria-hidden="true"></i>
-          Swipe &amp; D-Pad
-        </span>
         <span class="card-play">
           Main
           <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
@@ -623,24 +384,13 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       </div>
     </a>
 
-    <!-- ============ 2048 ============ -->
     <a class="card" href="g2048.html" data-accent="g2048">
-      <div class="card-top">
-        <div class="card-icon">
-          <i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>
-        </div>
-        <span class="card-tag">
-          <i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i>
-          Puzzle
-        </span>
+      <div class="card-icon">
+        <i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>
       </div>
       <h3>2048 Merge</h3>
-      <p>Geser ubin, gabungkan angka yang sama, dan raih ubin 2048. Gampang dimulai, susah ditamatkan.</p>
+      <p>Gabungkan angka yang sama sampai dapat 2048.</p>
       <div class="card-foot">
-        <span class="card-meta">
-          <i class="fa-solid fa-arrows-up-down-left-right" aria-hidden="true"></i>
-          Swipe 4 Arah
-        </span>
         <span class="card-play">
           Main
           <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
@@ -648,24 +398,13 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       </div>
     </a>
 
-    <!-- ============ BREAKOUT ============ -->
     <a class="card" href="breakout.html" data-accent="breakout">
-      <div class="card-top">
-        <div class="card-icon">
-          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-        </div>
-        <span class="card-tag">
-          <i class="fa-solid fa-hand-pointer" aria-hidden="true"></i>
-          Refleks
-        </span>
+      <div class="card-icon">
+        <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
       </div>
       <h3>Brick Breaker</h3>
-      <p>Pantulkan bola, hancurkan semua bata. Gerakkan paddle dengan jari, jangan sampai bola jatuh.</p>
+      <p>Pantulkan bola, hancurkan semua bata.</p>
       <div class="card-foot">
-        <span class="card-meta">
-          <i class="fa-solid fa-hand-pointer" aria-hidden="true"></i>
-          Sentuh &amp; Geser
-        </span>
         <span class="card-play">
           Main
           <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
@@ -675,29 +414,21 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 
   </section>
 
-  <!-- ===== Footer ===== -->
-  <footer class="footer">
-    <span><b>GamehubFortechdev</b> · Dibuat dengan</span>
-    <i class="fa-solid fa-heart heart" aria-hidden="true"></i>
-    <span>Fortech Executor · © 2026 FortechDev</span>
-  </footer>
+  <footer class="footer">© 2026 FortechDev</footer>
 
 </main>
 
-<!-- =========================
-     SCRIPTS
-     ========================= -->
 <script>
 /* =========================================================
-   GAMEHUBFORTECHDEV — Home interactions (optimized)
+   GamehubFortechdev — minimal interactions
    ========================================================= */
 (function () {
   'use strict';
 
-  /* ---------------- Ripple (ringan, batched) ---------------- */
+  /* Ripple */
   const cards = document.querySelectorAll('.card');
-  const rippleStyle = document.createElement('style');
-  rippleStyle.textContent = `
+  const style = document.createElement('style');
+  style.textContent = `
     .fx-ripple{
       position:absolute;border-radius:50%;pointer-events:none;z-index:2;
       background:radial-gradient(circle, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 70%);
@@ -705,7 +436,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       animation:ripple .55s cubic-bezier(.22,.9,.28,1) forwards;
     }
   `;
-  document.head.appendChild(rippleStyle);
+  document.head.appendChild(style);
 
   cards.forEach((card) => {
     card.addEventListener('pointerdown', (e) => {
@@ -722,42 +453,26 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     }, { passive: true });
   });
 
-  /* ---------------- Parallax tilt — desktop only, rAF-throttled ---------------- */
+  /* Parallax — desktop only, rAF-throttled */
   const isFine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-
   if (isFine) {
-    let ticking = false;
-    let pendingCard = null;
-    let pendingX = 0, pendingY = 0;
-
+    let ticking = false, pendingCard = null, px = 0, py = 0;
     const apply = () => {
       ticking = false;
       if (!pendingCard) return;
-      const c = pendingCard;
-      const py = pendingY;
-      const px = pendingX;
-      c.style.transform =
+      pendingCard.style.transform =
         `translateY(-4px) rotateX(${(-py * 4).toFixed(2)}deg) rotateY(${(px * 4).toFixed(2)}deg)`;
     };
-
     cards.forEach((card) => {
       card.style.transformStyle = 'preserve-3d';
-
-      card.addEventListener('pointerenter', () => {
-        card.style.willChange = 'transform';
-      }, { passive: true });
-
+      card.addEventListener('pointerenter', () => { card.style.willChange = 'transform'; }, { passive: true });
       card.addEventListener('pointermove', (e) => {
         const r = card.getBoundingClientRect();
         pendingCard = card;
-        pendingX = (e.clientX - r.left) / r.width - 0.5;
-        pendingY = (e.clientY - r.top) / r.height - 0.5;
-        if (!ticking) {
-          ticking = true;
-          requestAnimationFrame(apply);
-        }
+        px = (e.clientX - r.left) / r.width - 0.5;
+        py = (e.clientY - r.top) / r.height - 0.5;
+        if (!ticking) { ticking = true; requestAnimationFrame(apply); }
       }, { passive: true });
-
       card.addEventListener('pointerleave', () => {
         card.style.transform = '';
         card.style.willChange = 'auto';
@@ -766,7 +481,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     });
   }
 
-  /* ---------------- Prefetch game pages ---------------- */
+  /* Prefetch */
   const prefetch = () => {
     document.querySelectorAll('a.card').forEach((a) => {
       const href = a.getAttribute('href');
@@ -777,17 +492,12 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       document.head.appendChild(link);
     });
   };
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(prefetch, { timeout: 2000 });
-  } else {
-    setTimeout(prefetch, 1400);
-  }
+  if ('requestIdleCallback' in window) requestIdleCallback(prefetch, { timeout: 2000 });
+  else setTimeout(prefetch, 1400);
 
-  /* ---------------- Video autoplay fallback ---------------- */
+  /* Video */
   const video = document.querySelector('.bg-video');
   if (video) {
-    // hints untuk performa
-    video.setAttribute('preload', 'auto');
     video.disablePictureInPicture = true;
     if ('playsInline' in video) video.playsInline = true;
 
@@ -808,7 +518,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     if (video.readyState >= 2) tryPlay();
     else video.addEventListener('loadeddata', tryPlay, { once: true });
 
-    // pause video saat tab disembunyikan → hemat CPU
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
         if (!video.paused) { video.dataset.wasPlaying = '1'; video.pause(); }
@@ -819,7 +528,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     });
   }
 
-  /* ---------------- Prevent double-tap zoom on iOS ---------------- */
+  /* Anti double-tap zoom */
   let lastTouch = 0;
   document.addEventListener('touchend', (e) => {
     const now = Date.now();
@@ -827,10 +536,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     lastTouch = now;
   }, { passive: false });
 
-  /* ---------------- Prevent drag on media ---------------- */
-  document.querySelectorAll('img, video, svg').forEach((el) => {
-    el.setAttribute('draggable', 'false');
-  });
+  document.querySelectorAll('img, video, svg').forEach((el) => el.setAttribute('draggable', 'false'));
 
 })();
 </script>
