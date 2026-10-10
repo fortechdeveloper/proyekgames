@@ -42,9 +42,17 @@ html,body{
   overscroll-behavior:none;
   user-select:none;
   -webkit-user-select:none;
+  -webkit-touch-callout:none;
 }
 canvas{display:block;position:fixed;inset:0;width:100%;height:100%;touch-action:none}
-button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button{
+  font:inherit;color:inherit;background:none;border:none;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+}
 a{color:inherit;text-decoration:none}
 i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 
@@ -63,9 +71,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   top:calc(var(--safe-t) + 12px);
   left:calc(var(--safe-l) + 12px);
   right:calc(var(--safe-r) + 12px);
-  display:flex;
-  align-items:center;
-  gap:10px;
+  display:flex;align-items:center;gap:10px;
   padding:8px 12px;
   border-radius:16px;
   z-index:10;
@@ -84,7 +90,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   backdrop-filter:blur(10px);
   -webkit-backdrop-filter:blur(10px);
   pointer-events:auto;
-  transition:transform .25s var(--ease);
+  transition:transform .2s var(--ease);
 }
 .topbar .icon-btn:active{transform:scale(.9)}
 .topbar .icon-btn i{font-size:14px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
@@ -124,7 +130,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 .speedo .fill{
   stroke:#6ba3f7;stroke-width:7;
   stroke-dasharray:220;stroke-dashoffset:220;
-  transition:stroke-dashoffset .12s linear, stroke .3s ease;
+  transition:stroke-dashoffset .08s linear, stroke .2s ease;
   filter:drop-shadow(0 0 8px rgba(107,163,247,.9));
 }
 .speedo .txt{text-align:center;line-height:1;z-index:1}
@@ -147,15 +153,13 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   bottom:calc(var(--safe-b) + 244px);
   padding:8px 14px;
   border-radius:12px;
-  font-size:13px;
-  font-weight:900;
-  letter-spacing:1px;
+  font-size:13px;font-weight:900;letter-spacing:1px;
   color:#fff;
   z-index:10;
   pointer-events:none;
   text-shadow:0 2px 4px rgba(0,0,0,.6);
   min-width:44px;text-align:center;
-  transition:color .3s ease;
+  transition:color .2s ease;
   box-shadow:
     0 8px 20px rgba(2,10,25,.5),
     inset 0 1px 0 rgba(255,255,255,.25);
@@ -192,7 +196,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   height:100%;width:0%;
   border-radius:99px;
   background:linear-gradient(90deg,#6ba3f7 0%,#86efac 40%,#fde68a 70%,#f87171 100%);
-  transition:width .12s linear;
+  transition:width .08s linear;
   box-shadow:0 0 10px rgba(134,239,172,.6);
   position:relative;
 }
@@ -234,9 +238,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   pointer-events:none;
 }
 .steer-panel{
-  display:flex;
-  gap:8px;
-  padding:8px;
+  display:flex;gap:8px;padding:8px;
   border-radius:20px;
   pointer-events:auto;
   background:var(--glass-2);
@@ -251,10 +253,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 .steer-panel button{
   width:62px;height:62px;
   border-radius:15px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:2px;
   background:linear-gradient(160deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
   border:1px solid rgba(255,255,255,.24);
@@ -263,9 +262,10 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     0 4px 12px rgba(0,0,0,.30),
     inset 0 1px 0 rgba(255,255,255,.35),
     inset 0 -3px 6px rgba(0,0,0,.18);
-  transition:transform .1s var(--ease), background .1s var(--ease), box-shadow .1s var(--ease);
+  transition:transform .08s var(--ease), background .08s var(--ease), box-shadow .08s var(--ease);
   position:relative;
   overflow:hidden;
+  will-change:transform;
 }
 .steer-panel button::before{
   content:'';
@@ -275,20 +275,21 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   background:radial-gradient(circle at 50% 15%, rgba(255,255,255,.28) 0%, transparent 55%);
   pointer-events:none;
 }
-.steer-panel button i{font-size:22px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.steer-panel button i{font-size:22px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5));pointer-events:none}
 .steer-panel button .lbl{
   font-size:8.5px;font-weight:800;letter-spacing:.6px;
   text-transform:uppercase;
   color:rgba(255,255,255,.72);
   text-shadow:0 1px 2px rgba(0,0,0,.6);
+  pointer-events:none;
 }
 .steer-panel button.active{
-  background:linear-gradient(160deg, rgba(107,163,247,.55), rgba(59,130,246,.35));
+  background:linear-gradient(160deg, rgba(107,163,247,.65), rgba(59,130,246,.42));
   box-shadow:
     0 2px 6px rgba(0,0,0,.35),
     inset 0 2px 4px rgba(0,0,0,.25),
     inset 0 -1px 2px rgba(255,255,255,.15);
-  transform:scale(.94);
+  transform:scale(.93);
 }
 
 .pedals{
@@ -309,10 +310,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 }
 .pedals button{
   border-radius:15px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:3px;
   color:#fff;
   border:1px solid rgba(255,255,255,.24);
@@ -320,9 +318,10 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     0 4px 12px rgba(0,0,0,.30),
     inset 0 1px 0 rgba(255,255,255,.35),
     inset 0 -3px 6px rgba(0,0,0,.20);
-  transition:transform .1s var(--ease), background .1s var(--ease), box-shadow .1s var(--ease);
+  transition:transform .08s var(--ease), background .08s var(--ease), box-shadow .08s var(--ease);
   position:relative;
   overflow:hidden;
+  will-change:transform;
 }
 .pedals button::before{
   content:'';
@@ -332,11 +331,12 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   background:radial-gradient(circle at 50% 15%, rgba(255,255,255,.28) 0%, transparent 55%);
   pointer-events:none;
 }
-.pedals button i{font-size:18px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.pedals button i{font-size:18px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5));pointer-events:none}
 .pedals button .lbl{
   font-size:8.5px;font-weight:800;letter-spacing:.6px;
   text-transform:uppercase;
   text-shadow:0 1px 2px rgba(0,0,0,.6);
+  pointer-events:none;
 }
 .pedals .hb{
   width:48px;height:48px;
@@ -355,15 +355,15 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 .pedals .gas .lbl{color:rgba(134,239,172,.95)}
 .pedals .gas i{font-size:22px}
 .pedals button.active{
-  transform:scale(.93);
+  transform:scale(.91);
   box-shadow:
     0 2px 6px rgba(0,0,0,.35),
     inset 0 2px 5px rgba(0,0,0,.30),
     inset 0 -1px 2px rgba(255,255,255,.15);
 }
-.pedals .gas.active{background:linear-gradient(160deg, rgba(34,197,94,.70), rgba(34,197,94,.42))}
-.pedals .brake.active{background:linear-gradient(160deg, rgba(217,79,107,.70), rgba(217,79,107,.42))}
-.pedals .hb.active{background:linear-gradient(160deg, rgba(253,230,138,.70), rgba(253,230,138,.42))}
+.pedals .gas.active{background:linear-gradient(160deg, rgba(34,197,94,.75), rgba(34,197,94,.45))}
+.pedals .brake.active{background:linear-gradient(160deg, rgba(217,79,107,.75), rgba(217,79,107,.45))}
+.pedals .hb.active{background:linear-gradient(160deg, rgba(253,230,138,.75), rgba(253,230,138,.45))}
 
 .overlay{
   position:fixed;inset:0;
@@ -580,7 +580,8 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 
 <script>
 /* =========================================================
-   OFF-ROAD JEEP 3D v3 — GamehubFortechdev
+   OFF-ROAD JEEP 3D v4 — GamehubFortechdev
+   Kontrol ultra responsif (pointer capture, no lag)
    ========================================================= */
 (function () {
   'use strict';
@@ -591,7 +592,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     return;
   }
 
-  /* ---------------- DOM ---------------- */
   const cvs       = document.getElementById('scene');
   const overlay   = document.getElementById('overlay');
   const ovlBtn    = document.getElementById('ovlBtn');
@@ -603,15 +603,19 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   const camBtn    = document.getElementById('camBtn');
   const toastEl   = document.getElementById('toast');
 
-  /* ---------------- CONFIG ---------------- */
+  /* =========================================================
+     CONFIG — responsif
+     ========================================================= */
   const MAP_SIZE    = 160;
-  const MAX_SPEED   = 27;
-  const MAX_REVERSE = 8;
-  const ACCEL       = 18;
-  const BRAKE       = 26;
-  const ENGINE_BRAKE= 5;
-  const STEER_MAX   = 0.65;
-  const STEER_RATE  = 3.2;
+  const MAX_SPEED   = 30;
+  const MAX_REVERSE = 9;
+  const ACCEL       = 26;      // naik dari 18
+  const BRAKE       = 38;      // naik dari 26
+  const ENGINE_BRAKE= 6;       // naik dari 5
+  const STEER_MAX   = 0.68;
+  const STEER_RATE  = 10;      // naik dari 3.2 — respon ~80ms
+  const STEER_RETURN = 12;     // auto-center saat tombol lepas
+  const SPEED_DIV   = 3.5;     // pembagi speedFactor (dari 6)
   const SKID_MAX    = 90;
 
   function toast(msg, ms = 1500) {
@@ -682,7 +686,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, 1024, 1024);
 
-    // patches grass
     for (let i = 0; i < 900; i++) {
       const x = Math.random() * 1024;
       const y = Math.random() * 1024;
@@ -695,7 +698,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       ctx.fill();
     }
 
-    // rumput tinggi (strokes)
     ctx.globalAlpha = 0.55;
     for (let i = 0; i < 3000; i++) {
       const x = Math.random() * 1024;
@@ -708,7 +710,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       ctx.stroke();
     }
 
-    // bunga kecil
     ctx.globalAlpha = 0.7;
     for (let i = 0; i < 90; i++) {
       const x = Math.random() * 1024;
@@ -720,7 +721,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       ctx.fill();
     }
 
-    // noise final
     ctx.globalAlpha = 0.08;
     for (let i = 0; i < 15000; i++) {
       ctx.fillStyle = Math.random() < 0.5 ? '#000' : '#fff';
@@ -756,13 +756,11 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     ctx.fillStyle = '#2c2f36';
     ctx.fillRect(0, 0, 512, 512);
 
-    // noise asphalt
     for (let i = 0; i < 12000; i++) {
       const v = Math.random() * 50 | 0;
       ctx.fillStyle = `rgba(${v},${v},${v},0.4)`;
       ctx.fillRect(Math.random() * 512, Math.random() * 512, 1.6, 1.6);
     }
-    // crack marks
     ctx.strokeStyle = 'rgba(0,0,0,0.3)';
     ctx.lineWidth = 0.6;
     for (let i = 0; i < 60; i++) {
@@ -777,7 +775,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       }
       ctx.stroke();
     }
-    // center dashed line
     ctx.fillStyle = 'rgba(240,220,120,.75)';
     for (let i = 0; i < 512; i += 60) ctx.fillRect(250, i, 12, 34);
 
@@ -807,7 +804,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   addRoad(-52, -38, 7, 70, 0.42);
   addRoad(56, 40, 7, 60, -0.34);
 
-  /* ---------------- TREES (3 jenis) ---------------- */
+  /* ---------------- TREES ---------------- */
   const trunkMat = new THREE.MeshStandardMaterial({ color: 0x533a22, roughness: 0.95 });
   const deadTrunkMat = new THREE.MeshStandardMaterial({ color: 0x4a3826, roughness: 0.98 });
   const leafMats = [
@@ -843,7 +840,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     trunk.castShadow = true; trunk.receiveShadow = true;
     g.add(trunk);
 
-    // 3 bulatan besar untuk crown
     [
       [1.6, 0, 2.4, 0],
       [1.2, 0.9, 2.9, 0.4],
@@ -868,7 +864,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     trunk.castShadow = true; trunk.receiveShadow = true;
     g.add(trunk);
 
-    // cabang-cabang
     for (let i = 0; i < 5; i++) {
       const ang = Math.random() * Math.PI * 2;
       const len = 1.0 + Math.random() * 1.2;
@@ -949,14 +944,12 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     body.castShadow = true; body.receiveShadow = true;
     g.add(body);
 
-    // Roof
     const roofMat = new THREE.MeshStandardMaterial({ color: 0x2e2c2c, roughness: 0.9 });
     const roof = new THREE.Mesh(new THREE.BoxGeometry(w * 1.06, 0.35, d * 1.06), roofMat);
     roof.position.y = h + 0.17;
     roof.castShadow = true; roof.receiveShadow = true;
     g.add(roof);
 
-    // Roof border
     const border = new THREE.Mesh(
       new THREE.BoxGeometry(w * 1.08, 0.12, d * 1.08),
       new THREE.MeshStandardMaterial({ color: 0x1a1919, roughness: 0.85 })
@@ -964,7 +957,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     border.position.y = h + 0.36;
     g.add(border);
 
-    // AC unit on roof
     if (Math.random() < 0.7) {
       const ac = new THREE.Mesh(
         new THREE.BoxGeometry(1.2, 0.5, 0.9),
@@ -975,7 +967,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       g.add(ac);
     }
 
-    // Chimney
     if (Math.random() < 0.5) {
       const ch = new THREE.Mesh(
         new THREE.CylinderGeometry(0.35, 0.4, 1.3, 8),
@@ -986,7 +977,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       g.add(ch);
     }
 
-    // Windows
     const rows = Math.max(1, Math.floor(h / 3));
     const cols = Math.max(2, Math.floor(w / 2.5));
     const winW = 0.9, winH = 1.2;
@@ -1004,11 +994,9 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       }
     }
 
-    // Door
     const door = new THREE.Mesh(new THREE.BoxGeometry(1.2, 2.2, 0.12), doorMat);
     door.position.set(0, 1.1, d / 2 + 0.06);
     g.add(door);
-    // Door handle
     const handle = new THREE.Mesh(
       new THREE.BoxGeometry(0.35, 0.06, 0.06),
       new THREE.MeshStandardMaterial({ color: 0xc9cfd6, metalness: 0.9, roughness: 0.2 })
@@ -1046,7 +1034,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     box.castShadow = true; box.receiveShadow = true;
     g.add(box);
 
-    // frame
     const darkWood = new THREE.MeshStandardMaterial({ color: 0x5a3f22, roughness: 0.9 });
     const bar1 = new THREE.Mesh(new THREE.BoxGeometry(s * 1.02, 0.08, 0.08), darkWood);
     bar1.position.set(0, s * 0.5, s / 2 + 0.01);
@@ -1098,13 +1085,11 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     pole.castShadow = true;
     g.add(pole);
 
-    // arm
     const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.9, 6), metalMat);
     arm.position.set(0.45, 4.7, 0);
     arm.rotation.z = Math.PI / 2;
     g.add(arm);
 
-    // lamp head
     const headMat = new THREE.MeshStandardMaterial({
       color: 0xffe9a8, emissive: 0xffe9a8, emissiveIntensity: 0.9,
     });
@@ -1129,7 +1114,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     sign.castShadow = true;
     g.add(sign);
 
-    // black arrow
     const arrowMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.8 });
     const arrow = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.1, 0.02), arrowMat);
     arrow.position.set(0, 2.1, 0.035);
@@ -1142,7 +1126,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     const metalMat = new THREE.MeshStandardMaterial({ color: 0x8a8d92, metalness: 0.6, roughness: 0.5 });
     const tankMat = new THREE.MeshStandardMaterial({ color: 0xa8b0b8, metalness: 0.5, roughness: 0.55 });
 
-    // legs
     for (let i = 0; i < 4; i++) {
       const ang = (i / 4) * Math.PI * 2 + Math.PI / 4;
       const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, 5, 6), metalMat);
@@ -1151,26 +1134,22 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       g.add(leg);
     }
 
-    // tank
     const tank = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 1.8, 3, 16), tankMat);
     tank.position.y = 6.5;
     tank.castShadow = true; tank.receiveShadow = true;
     g.add(tank);
 
-    // cone roof
     const roof = new THREE.Mesh(new THREE.ConeGeometry(1.9, 1.2, 16), tankMat);
     roof.position.y = 8.6;
     roof.castShadow = true;
     g.add(roof);
 
-    // ladder
     const ladderMat = new THREE.MeshStandardMaterial({ color: 0x3a3d42, roughness: 0.6, metalness: 0.7 });
     for (let i = 0; i < 12; i++) {
       const rung = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.05, 0.05), ladderMat);
       rung.position.set(0, 0.4 + i * 0.45, 1.85);
       g.add(rung);
     }
-    // ladder rails
     [-0.22, 0.22].forEach((x) => {
       const rail = new THREE.Mesh(new THREE.BoxGeometry(0.06, 5.8, 0.06), ladderMat);
       rail.position.set(x, 3.1, 1.85);
@@ -1180,7 +1159,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     return g;
   }
 
-  /* ---------------- FENCE ---------------- */
   function makeFence(length) {
     const g = new THREE.Group();
     const postMat = new THREE.MeshStandardMaterial({ color: 0x6b5b45, roughness: 0.9 });
@@ -1207,7 +1185,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
      ========================================================= */
   const obstacles = [];
 
-  // POHON: mix jenis
   for (let i = 0; i < 130; i++) {
     const x = (Math.random() - 0.5) * MAP_SIZE * 0.95;
     const z = (Math.random() - 0.5) * MAP_SIZE * 0.95;
@@ -1225,7 +1202,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     obstacles.push({ x, z, r: 0.55 * s });
   }
 
-  // SEMAK
   for (let i = 0; i < 70; i++) {
     const x = (Math.random() - 0.5) * MAP_SIZE * 0.95;
     const z = (Math.random() - 0.5) * MAP_SIZE * 0.95;
@@ -1236,7 +1212,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     scene.add(b);
   }
 
-  // BATU (cluster + single)
   for (let i = 0; i < 55; i++) {
     const cx = (Math.random() - 0.5) * MAP_SIZE * 0.95;
     const cz = (Math.random() - 0.5) * MAP_SIZE * 0.95;
@@ -1255,7 +1230,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     }
   }
 
-  // BANGUNAN
   const buildColors = [0xa87f5b, 0x8b9aa8, 0xb5a17d, 0x7a8b9c, 0x9c7a5a];
   const buildPositions = [
     [-52, -52], [-43, -60], [-34, -48], [-58, -44],
@@ -1276,7 +1250,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     obstacles.push({ x, z, r: Math.max(w, d) * 0.55 });
   });
 
-  // BARREL cluster
   for (let i = 0; i < 28; i++) {
     const x = (Math.random() - 0.5) * MAP_SIZE * 0.85;
     const z = (Math.random() - 0.5) * MAP_SIZE * 0.85;
@@ -1287,7 +1260,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     obstacles.push({ x, z, r: 0.45 });
   }
 
-  // CRATE cluster (dekat bangunan/pinggir)
   for (let i = 0; i < 20; i++) {
     const x = (Math.random() - 0.5) * MAP_SIZE * 0.9;
     const z = (Math.random() - 0.5) * MAP_SIZE * 0.9;
@@ -1299,7 +1271,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     obstacles.push({ x, z, r: 0.55 });
   }
 
-  // CONE
   for (let i = 0; i < 22; i++) {
     const x = (Math.random() - 0.5) * MAP_SIZE * 0.85;
     const z = (Math.random() - 0.5) * MAP_SIZE * 0.85;
@@ -1309,7 +1280,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     scene.add(c);
   }
 
-  // TIRE STACKS
   for (let i = 0; i < 14; i++) {
     const x = (Math.random() - 0.5) * MAP_SIZE * 0.85;
     const z = (Math.random() - 0.5) * MAP_SIZE * 0.85;
@@ -1320,7 +1290,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     obstacles.push({ x, z, r: 0.6 });
   }
 
-  // LAMP POSTS along main roads
   for (let i = -MAP_SIZE/2 + 20; i < MAP_SIZE/2 - 20; i += 24) {
     const l1 = makeLamppost();
     l1.position.set(5.5, 0, i);
@@ -1344,7 +1313,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     scene.add(l4);
   }
 
-  // SIGNS
   [[10, 30], [-12, -35], [30, -12], [-28, 15]].forEach(([x, z]) => {
     const s = makeSign();
     s.position.set(x, 0, z);
@@ -1353,7 +1321,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     obstacles.push({ x, z, r: 0.4 });
   });
 
-  // WATER TOWERS
   [[-70, -70], [70, 70]].forEach(([x, z]) => {
     const w = makeWaterTower();
     w.position.set(x, 0, z);
@@ -1361,7 +1328,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     obstacles.push({ x, z, r: 3.5 });
   });
 
-  // FENCES
   const fenceN = makeFence(MAP_SIZE);
   fenceN.position.set(0, 0, -MAP_SIZE / 2);
   scene.add(fenceN);
@@ -1420,7 +1386,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   }
 
   /* =========================================================
-     JEEP — DETAIL BUILD
+     JEEP
      ========================================================= */
   const jeep = new THREE.Group();
   scene.add(jeep);
@@ -1444,24 +1410,20 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   const caliperMat   = new THREE.MeshStandardMaterial({ color: 0xcc2222, roughness: 0.4, metalness: 0.6 });
   const rubberMat    = new THREE.MeshStandardMaterial({ color: 0x1a1a1e, roughness: 0.95 });
 
-  // CHASSIS UNDER
   const chassis = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.28, 3.7), paintDarkMat);
   chassis.position.y = 0.58;
   chassis.castShadow = true; chassis.receiveShadow = true;
   chassisGroup.add(chassis);
 
-  // Skid plate
   const skid = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.08, 2.4), new THREE.MeshStandardMaterial({ color: 0x4a4d52, metalness: 0.8, roughness: 0.4 }));
   skid.position.set(0, 0.42, 0);
   chassisGroup.add(skid);
 
-  // BODY LOWER
   const bodyLow = new THREE.Mesh(new THREE.BoxGeometry(1.78, 0.55, 3.55), paintMat);
   bodyLow.position.y = 0.92;
   bodyLow.castShadow = true; bodyLow.receiveShadow = true;
   chassisGroup.add(bodyLow);
 
-  // Door lines (2 per sisi)
   [-1, 1].forEach((s) => {
     [0.35, -0.55].forEach((zPos) => {
       const line = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.5, 0.015), paintDarkMat);
@@ -1470,7 +1432,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     });
   });
 
-  // Side vents (3 per sisi)
   [-1, 1].forEach((s) => {
     for (let i = 0; i < 3; i++) {
       const vent = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.05, 0.14), darkMat);
@@ -1479,7 +1440,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     }
   });
 
-  // HOOD
   const hood = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.18, 1.35), paintMat);
   hood.position.set(0, 1.28, -1.1);
   hood.castShadow = true; hood.receiveShadow = true;
@@ -1489,26 +1449,22 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   hoodRidge.position.set(0, 1.4, -1.1);
   chassisGroup.add(hoodRidge);
 
-  // Hood vents (4 slot)
   for (let i = 0; i < 4; i++) {
     const vent = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.04, 0.06), darkMat);
     vent.position.set(0, 1.375, -1.5 + i * 0.22);
     chassisGroup.add(vent);
   }
 
-  // Hood latch
   const latch = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.05, 0.05), chromeMat);
   latch.position.set(0, 1.22, -1.78);
   chassisGroup.add(latch);
 
-  // Hood pin (2 kecil)
   [-0.65, 0.65].forEach((x) => {
     const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.12, 6), chromeMat);
     pin.position.set(x, 1.35, -1.72);
     chassisGroup.add(pin);
   });
 
-  // FENDERS
   [-1, 1].forEach((s) => {
     const fender = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.24, 1.5), paintMat);
     fender.position.set(s * 0.9, 1.02, -1.15);
@@ -1519,7 +1475,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     rearFender.position.z = 1.15;
     chassisGroup.add(rearFender);
 
-    // Fender flares (2 strip di tiap fender)
     for (let f = 0; f < 2; f++) {
       const flare = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.1, 1.55), softDarkMat);
       flare.position.set(s * (0.95 + f * 0.04), 0.94, -1.15 + f * 2.3);
@@ -1527,26 +1482,22 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     }
   });
 
-  // CABIN
   const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.72, 1.0, 1.55), paintMat);
   cabin.position.set(0, 1.5, 0.55);
   cabin.castShadow = true; cabin.receiveShadow = true;
   chassisGroup.add(cabin);
 
-  // ROOF
   const roof = new THREE.Mesh(new THREE.BoxGeometry(1.76, 0.09, 1.6), paintMat);
   roof.position.set(0, 2.05, 0.55);
   roof.castShadow = true; roof.receiveShadow = true;
   chassisGroup.add(roof);
 
-  // Roof rails
   [-0.78, 0.78].forEach((x) => {
     const rail = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.08, 1.55), darkMat);
     rail.position.set(x, 2.14, 0.55);
     chassisGroup.add(rail);
   });
 
-  // ROOF RACK (frame + crossbars)
   const rackMat = darkMat;
   [-0.85, 0.85].forEach((x) => {
     const side = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 1.7), rackMat);
@@ -1559,7 +1510,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(cross);
   });
 
-  // Light bar (4 spotlight kecil di rack)
   for (let i = -1.5; i <= 1.5; i += 1) {
     const lb = new THREE.Mesh(
       new THREE.CylinderGeometry(0.09, 0.09, 0.08, 10),
@@ -1570,7 +1520,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(lb);
   }
 
-  // ROLL BAR
   [-0.7, 0.7].forEach((x) => {
     const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.05, 8), darkMat);
     bar.position.set(x, 1.5, 1.42);
@@ -1580,7 +1529,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   rollTop.rotation.z = Math.PI / 2;
   rollTop.position.set(0, 2.02, 1.42);
   chassisGroup.add(rollTop);
-  // diagonal support
   [-1, 1].forEach((s) => {
     const diag = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 1.4, 6), darkMat);
     diag.position.set(s * 0.7, 1.5, 1.7);
@@ -1588,7 +1536,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(diag);
   });
 
-  // WINDSHIELD FRAME
   [-0.85, 0.85].forEach((x) => {
     const post = new THREE.Mesh(new THREE.BoxGeometry(0.07, 1.0, 0.07), darkMat);
     post.position.set(x, 1.5, -0.42);
@@ -1613,20 +1560,17 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(sw);
   });
 
-  // DOOR HANDLES
   [-1, 1].forEach((s) => {
     const h = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.06, 0.28), chromeMat);
     h.position.set(s * 0.9, 1.2, 0.35);
     chassisGroup.add(h);
   });
 
-  // SIDE STEPS
   [-1, 1].forEach((s) => {
     const step = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.08, 1.6), softDarkMat);
     step.position.set(s * 1.0, 0.75, 0.35);
     step.castShadow = true;
     chassisGroup.add(step);
-    // grip tape stripes
     for (let i = 0; i < 4; i++) {
       const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.02, 0.1), darkMat);
       stripe.position.set(s * 1.0, 0.79, -0.3 + i * 0.4);
@@ -1634,16 +1578,13 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     }
   });
 
-  // MUD FLAPS
-  const mudFlapMat = softDarkMat;
   [[-0.94, 1.7], [0.94, 1.7], [-0.94, -1.7], [0.94, -1.7]].forEach(([x, z]) => {
-    const flap = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.5, 0.03), mudFlapMat);
+    const flap = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.5, 0.03), softDarkMat);
     flap.position.set(x, 0.55, z);
     flap.castShadow = true;
     chassisGroup.add(flap);
   });
 
-  // FRONT GRILL
   const grillFrame = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.5, 0.1), paintDarkMat);
   grillFrame.position.set(0, 1.06, -1.79);
   chassisGroup.add(grillFrame);
@@ -1654,7 +1595,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(slat);
   }
 
-  // JEEP BADGE (canvas texture di grill)
   (function addJeepBadge() {
     const c = document.createElement('canvas');
     c.width = 128; c.height = 32;
@@ -1674,7 +1614,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(badge);
   })();
 
-  // HEADLIGHTS
   [-0.55, 0.55].forEach((x) => {
     const hl = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16), headMat);
     hl.position.set(x, 1.08, -1.85);
@@ -1684,7 +1623,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     ring.position.set(x, 1.08, -1.84);
     chassisGroup.add(ring);
 
-    // Inner lens detail
     const inner = new THREE.Mesh(
       new THREE.CylinderGeometry(0.08, 0.08, 0.03, 12),
       new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 2 })
@@ -1694,20 +1632,17 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(inner);
   });
 
-  // TURN SIGNALS
   [-0.75, 0.75].forEach((x) => {
     const t = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.1, 0.06), amberMat);
     t.position.set(x, 0.92, -1.83);
     chassisGroup.add(t);
   });
 
-  // BUMPERS
   const bumperF = new THREE.Mesh(new THREE.BoxGeometry(1.88, 0.16, 0.28), chromeMat);
   bumperF.position.set(0, 0.78, -1.98);
   bumperF.castShadow = true;
   chassisGroup.add(bumperF);
 
-  // Tow hooks
   [-0.55, 0.55].forEach((x) => {
     const hook = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.02, 6, 12), chromeMat);
     hook.position.set(x, 0.72, -2.08);
@@ -1715,7 +1650,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(hook);
   });
 
-  // Tow strap (di bumper belakang)
   (function addTowStrap() {
     const strapMat = new THREE.MeshStandardMaterial({ color: 0xd97a2a, roughness: 0.9 });
     const strap = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.04, 1.0), strapMat);
@@ -1733,7 +1667,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   bumperR.castShadow = true;
   chassisGroup.add(bumperR);
 
-  // TAILLIGHTS
   [-0.65, 0.65].forEach((x) => {
     const tl = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.24, 0.08), tailMat);
     tl.position.set(x, 1.12, 1.9);
@@ -1744,7 +1677,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(tlFrame);
   });
 
-  // LICENSE PLATES
   const plateMatFront = new THREE.MeshStandardMaterial({ color: 0xf5f5f5, roughness: 0.4 });
   const plateF = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.2, 0.03), plateMatFront);
   plateF.position.set(0, 0.68, -2.14);
@@ -1754,7 +1686,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   plateR.position.set(0, 0.85, 2.17);
   chassisGroup.add(plateR);
 
-  // SPARE TIRE
   const spareGrp = new THREE.Group();
   const spareTire = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.44, 0.26, 24), tireMat);
   spareTire.rotation.x = Math.PI / 2;
@@ -1766,7 +1697,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   const spareHub = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.3, 10), hubMat);
   spareHub.rotation.x = Math.PI / 2;
   spareGrp.add(spareHub);
-  // spare mount
   const spareMount = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.6, 0.15), darkMat);
   spareMount.position.set(0, 0, -0.16);
   spareGrp.add(spareMount);
@@ -1774,7 +1704,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   spareGrp.position.set(0, 1.15, 2.22);
   chassisGroup.add(spareGrp);
 
-  // MIRRORS
   [-1, 1].forEach((s) => {
     const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.28, 6), darkMat);
     arm.position.set(s * 0.92, 1.75, -0.30);
@@ -1790,7 +1719,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(glass);
   });
 
-  // SNORKEL
   const snorkel = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 1.3, 10), darkMat);
   snorkel.position.set(-0.82, 1.6, -0.85);
   snorkel.rotation.z = 0.06;
@@ -1800,20 +1728,17 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   snorkelHead.position.set(-0.82, 2.28, -0.85);
   chassisGroup.add(snorkelHead);
 
-  // SNORKEL BRACKET
   for (let y = 1.2; y < 2.2; y += 0.4) {
     const br = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.03, 0.03), darkMat);
     br.position.set(-0.86, y, -0.85);
     chassisGroup.add(br);
   }
 
-  // ANTENNA
   const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.006, 1.4, 6), darkMat);
   antenna.position.set(0.65, 1.35, 1.65);
   antenna.rotation.z = -0.15;
   chassisGroup.add(antenna);
 
-  // EXHAUST
   const exhaust = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.6, 10), chromeMat);
   exhaust.rotation.z = Math.PI / 2;
   exhaust.position.set(0.65, 0.7, 2.1);
@@ -1824,7 +1749,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   exhaustTip.position.set(0.98, 0.7, 2.1);
   chassisGroup.add(exhaustTip);
 
-  // JERRY CAN (di belakang)
   (function addJerryCan() {
     const g = new THREE.Group();
     const canMat = new THREE.MeshStandardMaterial({ color: 0x8b2020, roughness: 0.6, metalness: 0.3 });
@@ -1832,13 +1756,11 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     can.castShadow = true;
     g.add(can);
 
-    // handle
     const handleMat = new THREE.MeshStandardMaterial({ color: 0x2a2a2a, roughness: 0.7 });
     const handle = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.05, 0.18), handleMat);
     handle.position.set(0, 0.24, 0);
     g.add(handle);
 
-    // cap
     const cap = new THREE.Mesh(
       new THREE.CylinderGeometry(0.04, 0.04, 0.06, 8),
       new THREE.MeshStandardMaterial({ color: 0x2a2a2a })
@@ -1847,7 +1769,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     cap.rotation.x = Math.PI / 2;
     g.add(cap);
 
-    // X detail
     const xMat = new THREE.MeshStandardMaterial({ color: 0xf5f5f5, roughness: 0.5 });
     const x1 = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.4, 0.02), xMat);
     x1.rotation.z = Math.PI / 4;
@@ -1863,7 +1784,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(g);
   })();
 
-  // WHEELS dengan brake disc + caliper + lug nuts
   const wheels = [];
 
   function createWheel(isFront) {
@@ -1878,28 +1798,23 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     steerPivot.add(spin);
     g.userData.spin = spin;
 
-    // Tire
     const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.36, 26), tireMat);
     tire.rotation.z = Math.PI / 2;
     tire.castShadow = true; tire.receiveShadow = true;
     spin.add(tire);
 
-    // Rim outer
     const rimOuter = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.375, 20), rimMat);
     rimOuter.rotation.z = Math.PI / 2;
     spin.add(rimOuter);
 
-    // Rim inner (deep dish)
     const rimInner = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.30, 16), darkMat);
     rimInner.rotation.z = Math.PI / 2;
     spin.add(rimInner);
 
-    // Hub cap
     const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.42, 12), hubMat);
     hub.rotation.z = Math.PI / 2;
     spin.add(hub);
 
-    // 5 spokes
     for (let i = 0; i < 5; i++) {
       const ang = (i / 5) * Math.PI * 2;
       const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.06, 0.32), rimMat);
@@ -1908,7 +1823,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       spin.add(spoke);
     }
 
-    // 5 lug nuts
     for (let i = 0; i < 5; i++) {
       const ang = (i / 5) * Math.PI * 2;
       const nut = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.05, 6), chromeMat);
@@ -1917,18 +1831,15 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       spin.add(nut);
     }
 
-    // Brake disc (di belakang rim)
     const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.04, 20), brakeDiscMat);
     disc.rotation.z = Math.PI / 2;
     disc.position.set(-0.05, 0, 0);
     spin.add(disc);
 
-    // Caliper (kuning di atas disc)
     const caliper = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.14, 0.1), caliperMat);
     caliper.position.set(-0.06, 0.14, 0);
     spin.add(caliper);
 
-    // Tread blocks
     const treadCount = 22;
     for (let i = 0; i < treadCount; i++) {
       const a = (i / treadCount) * Math.PI * 2;
@@ -1940,7 +1851,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       spin.add(block);
     }
 
-    // Valve stem
     const valve = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.06, 5), rubberMat);
     valve.position.set(0.06, 0.28, 0);
     spin.add(valve);
@@ -1956,7 +1866,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   const wRL = createWheel(false); wRL.position.set(-TRACK, 0.5,  WB); jeep.add(wRL); wheels.push(wRL);
   const wRR = createWheel(false); wRR.position.set( TRACK, 0.5,  WB); jeep.add(wRR); wheels.push(wRR);
 
-  // Headlight beams
   const beam1 = new THREE.SpotLight(0xffe9a8, 0.9, 30, Math.PI / 6, 0.5, 1.5);
   beam1.position.set(-0.55, 1.08, -1.9);
   beam1.target.position.set(-0.55, 0, -9);
@@ -1970,7 +1879,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   chassisGroup.add(beam2.target);
 
   /* =========================================================
-     DUST PARTICLES
+     DUST
      ========================================================= */
   const DUST_MAX = 150;
   const dustGeo = new THREE.BufferGeometry();
@@ -2025,7 +1934,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   }
 
   /* =========================================================
-     CAR STATE + UPDATE
+     CAR STATE
      ========================================================= */
   const car = {
     x: 0, z: 0,
@@ -2033,6 +1942,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     speed: 0,
     lateral: 0,
     steer: 0,
+    steerTarget: 0,
     wheelSpin: 0,
     bounce: 0,
     accelPitch: 0,
@@ -2046,6 +1956,9 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     handbrake: false,
   };
 
+  /* =========================================================
+     INPUT — KEYBOARD
+     ========================================================= */
   window.addEventListener('keydown', (e) => {
     switch (e.key) {
       case 'ArrowUp':    case 'w': case 'W': input.gas = true; e.preventDefault(); break;
@@ -2065,24 +1978,45 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     }
   });
 
+  /* =========================================================
+     INPUT — TOUCH RESPONSIF
+     Pakai Pointer Capture supaya tombol gak "lepas" saat jari geser.
+     ========================================================= */
   function bindHold(id, key) {
     const el = document.getElementById(id);
     if (!el) return;
-    const on = (e) => {
+
+    const activePointers = new Set();
+
+    const press = (e) => {
       e.preventDefault();
+      e.stopPropagation();
+      activePointers.add(e.pointerId);
       input[key] = true;
       el.classList.add('active');
+      try { el.setPointerCapture(e.pointerId); } catch (_) {}
     };
-    const off = (e) => {
-      e.preventDefault();
-      input[key] = false;
-      el.classList.remove('active');
+
+    const release = (e) => {
+      activePointers.delete(e.pointerId);
+      if (activePointers.size === 0) {
+        input[key] = false;
+        el.classList.remove('active');
+      }
+      try { el.releasePointerCapture(e.pointerId); } catch (_) {}
     };
-    el.addEventListener('pointerdown', on);
-    el.addEventListener('pointerup', off);
-    el.addEventListener('pointercancel', off);
-    el.addEventListener('pointerleave', off);
+
+    // pointerdown → instant response
+    el.addEventListener('pointerdown', press, { passive: false });
+    el.addEventListener('pointerup', release);
+    el.addEventListener('pointercancel', release);
+
+    // Safety: kalau window kehilangan fokus, lepas semua
+    el.addEventListener('lostpointercapture', release);
+
+    // contextmenu & drag cegah
     el.addEventListener('contextmenu', (e) => e.preventDefault());
+    el.addEventListener('dragstart', (e) => e.preventDefault());
   }
 
   bindHold('btnGas', 'gas');
@@ -2091,12 +2025,25 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   bindHold('btnRight', 'right');
   bindHold('btnHB', 'handbrake');
 
+  // Global: kalau semua jari diangkat, matikan semua input
+  window.addEventListener('blur', () => {
+    input.gas = input.brake = input.left = input.right = input.handbrake = false;
+    ['btnGas','btnBrake','btnLeft','btnRight','btnHB'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    });
+  });
+
+  /* =========================================================
+     UPDATE CAR
+     ========================================================= */
   function updateCar(dt) {
+    // Throttle / Brake / Reverse
     if (input.gas) {
       car.speed += ACCEL * dt;
     } else if (input.brake) {
       if (car.speed > 0.5) car.speed -= BRAKE * dt;
-      else car.speed -= ACCEL * 0.7 * dt;
+      else car.speed -= ACCEL * 0.75 * dt;
     } else {
       if (Math.abs(car.speed) > 0.1) {
         car.speed -= Math.sign(car.speed) * ENGINE_BRAKE * dt;
@@ -2109,14 +2056,20 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 
     car.speed = Math.max(-MAX_REVERSE, Math.min(MAX_SPEED, car.speed));
 
+    // Steering — instant responsif
     const target = (input.left ? 1 : 0) - (input.right ? 1 : 0);
-    car.steer += (target - car.steer) * Math.min(1, STEER_RATE * dt);
+    car.steerTarget = target;
 
-    const speedFactor = Math.min(1, Math.abs(car.speed) / 6);
+    const steerRate = (target === 0) ? STEER_RETURN : STEER_RATE;
+    car.steer += (target - car.steer) * Math.min(1, steerRate * dt);
+
+    // Turn rate — speed factor lebih galak
+    const speedFactor = Math.min(1, Math.abs(car.speed) / SPEED_DIV);
     const dirSign = car.speed >= 0 ? 1 : -1;
     const turnRate = car.steer * STEER_MAX * 2.4 * speedFactor * dirSign;
     car.angle += turnRate * dt;
 
+    // Drift
     const drifting = Math.abs(car.steer) > 0.5 &&
                      Math.abs(car.speed) > 10 &&
                      (input.handbrake || Math.abs(car.steer) > 0.75);
@@ -2141,6 +2094,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     if (car.z < -half) { car.z = -half; car.speed *= 0.5; }
     if (car.z >  half) { car.z =  half; car.speed *= 0.5; }
 
+    // Obstacle
     for (let i = 0; i < obstacles.length; i++) {
       const o = obstacles[i];
       const ox = car.x - o.x;
@@ -2157,19 +2111,20 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       }
     }
 
+    // Visual
     car.wheelSpin += (car.speed / 0.5) * dt;
 
     const speedMag = Math.abs(car.speed);
     car.bounce = Math.sin(performance.now() * 0.012) * Math.min(0.05, speedMag * 0.0018);
 
     const accelDir = input.gas ? 1 : (input.brake ? -1 : 0);
-    car.accelPitch += (accelDir * 0.05 - car.accelPitch) * Math.min(1, 4 * dt);
+    car.accelPitch += (accelDir * 0.05 - car.accelPitch) * Math.min(1, 6 * dt);
 
-    const targetRoll = -car.steer * Math.min(0.15, speedMag * 0.008);
-    car.rollAngle += (targetRoll - car.rollAngle) * Math.min(1, 5 * dt);
+    const targetRoll = -car.steer * Math.min(0.18, speedMag * 0.010);
+    car.rollAngle += (targetRoll - car.rollAngle) * Math.min(1, 8 * dt);
 
     const targetRpm = Math.min(1, (input.gas ? 0.35 : 0) + speedMag / MAX_SPEED * 0.85);
-    car.rpm += (targetRpm - car.rpm) * Math.min(1, 5 * dt);
+    car.rpm += (targetRpm - car.rpm) * Math.min(1, 8 * dt);
 
     jeep.position.set(car.x, 0, car.z);
     jeep.rotation.y = car.angle;
@@ -2185,7 +2140,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       w.userData.spin.rotation.x = -car.wheelSpin;
     });
 
-    // DUST
     const isFast = Math.abs(car.speed) > 8;
     const isDrifting = Math.abs(car.lateral) > 1.5;
     if ((isFast || isDrifting) && Math.random() < 0.6) {
@@ -2196,11 +2150,9 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     }
     updateDust(dt);
 
-    // SKID MARKS saat drift
     skidCooldown -= dt;
     if (isDrifting && skidCooldown <= 0) {
       skidCooldown = 0.04;
-      // spawn 2 marks di posisi roda belakang
       [-0.9, 0.9].forEach((sideOffset) => {
         const px = car.x + rightX * sideOffset - forwardX * 1.1;
         const pz = car.z + rightZ * sideOffset - forwardZ * 1.1;
@@ -2234,7 +2186,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       lookZ = car.z + fz * 3;
     }
 
-    const k = Math.min(1, 5 * dt);
+    const k = Math.min(1, 7 * dt);
     camera.position.x += (targetX - camera.position.x) * k;
     camera.position.y += (targetY - camera.position.y) * k;
     camera.position.z += (targetZ - camera.position.z) * k;
@@ -2321,7 +2273,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     overlay.classList.add('hide');
     running = true;
     last = performance.now();
-    setTimeout(() => toast('Tekan GAS untuk jalan', 2200), 350);
+    setTimeout(() => toast('Tekan GAS untuk jalan', 2000), 300);
   });
 
   let lastTouch = 0;
