@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<meta name="theme-color" content="#0a1e3d" />
+<title>Neon Snake — GamehubFortechdev</title>
+
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+
+<style>
+/* =========================================================
+   NEON SNAKE — Liquid Glass
+   ========================================================= */
+
+:root{
+  --text:#f4f9ff;
+  --text-dim:rgba(244,249,255,.72);
+  --text-soft:rgba(244,249,255,.52);
+  --glass:rgba(255,255,255,.12);
+  --glass-border:rgba(255,255,255,.25);
+  --radius-m:18px;
+  --radius-l:22px;
+  --ease:cubic-bezier(.22,.9,.28,1);
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-l:env(safe-area-inset-left,0px);
+  --safe-r:env(safe-area-inset-right,0px);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,'SF Pro Display','Helvetica Neue',Arial,sans-serif;
+  background:#0a1e3d;
+  color:var(--text);
+  min-height:100vh;
+  min-height:100dvh;
+  overflow-x:hidden;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;
+  touch-action:manipulation;
+}
+img,svg,video,canvas{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit;text-decoration:none}
+i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
+
+/* =========================================================
+   BACKGROUND (static gradient, no video — hemat performa)
+   ========================================================= */
+.bg{
+  position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 50% 0%, #16345e 0%, #0f2848 45%, #061429 100%),
+    linear-gradient(180deg, #0a1e3d 0%, #061429 100%);
+}
+.bg::after{
+  content:"";
+  position:absolute;inset:0;
+  background-image:radial-gradient(rgba(107,163,247,.14) 1px, transparent 1px);
+  background-size:30px 30px;
+  mask-image:radial-gradient(ellipse at 50% 40%, #000 0%, transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse at 50% 40%, #000 0%, transparent 75%);
+  opacity:.55;
+}
+
+/* =========================================================
+   SHELL
+   ========================================================= */
+.shell{
+  max-width:520px;
+  margin:0 auto;
+  min-height:100vh;
+  min-height:100dvh;
+  padding:calc(var(--safe-t) + 16px) calc(var(--safe-r) + 16px) calc(var(--safe-b) + 20px) calc(var(--safe-l) + 16px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+  z-index:1;
+}
+
+.glass{
+  position:relative;
+  background:var(--glass);
+  backdrop-filter:blur(14px) saturate(1.6);
+  -webkit-backdrop-filter:blur(14px) saturate(1.6);
+  border:1px solid var(--glass-border);
+  box-shadow:
+    0 8px 24px rgba(2,10,25,.32),
+    inset 0 1px 0 rgba(255,255,255,.35),
+    inset 0 -1px 0 rgba(255,255,255,.06);
+  contain:paint;
+}
+.glass::before{
+  content:"";
+  position:absolute;left:0;right:0;top:0;
+  height:42%;border-radius:inherit;
+  background:linear-gradient(180deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,.04) 55%, transparent 100%);
+  pointer-events:none;z-index:0;
+}
+.glass > *{position:relative;z-index:1}
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+.topbar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.icon-btn{
+  width:40px;height:40px;
+  flex:none;
+  border-radius:12px;
+  display:grid;place-items:center;
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  color:#fff;
+  box-shadow:
+    0 4px 14px rgba(2,10,25,.30),
+    inset 0 1px 0 rgba(255,255,255,.35);
+  backdrop-filter:blur(12px) saturate(1.5);
+  -webkit-backdrop-filter:blur(12px) saturate(1.5);
+  transition:transform .3s var(--ease), background .3s var(--ease);
+  -webkit-tap-highlight-color:transparent;
+}
+.icon-btn:active{transform:scale(.9)}
+.icon-btn i{font-size:15px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+
+.title-box{flex:1;min-width:0}
+.title-box h1{
+  font-size:16px;font-weight:800;letter-spacing:-.3px;
+  color:#fff;line-height:1.2;
+  text-shadow:0 1px 3px rgba(0,0,0,.45);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.title-box span{
+  display:block;
+  font-size:10px;font-weight:700;letter-spacing:.6px;
+  text-transform:uppercase;
+  color:var(--text-soft);
+  text-shadow:0 1px 2px rgba(0,0,0,.4);
+}
+
+/* =========================================================
+   HUD
+   ========================================================= */
+.hud{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:8px;
+}
+.hud-cell{
+  padding:10px 8px;
+  border-radius:14px;
+  text-align:center;
+  min-width:0;
+}
+.hud-cell .k{
+  display:block;
+  font-size:9.5px;font-weight:800;letter-spacing:.7px;
+  text-transform:uppercase;
+  color:var(--text-soft);
+  margin-bottom:2px;
+}
+.hud-cell .v{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-size:18px;font-weight:800;letter-spacing:-.4px;
+  color:#fff;
+  line-height:1.15;
+  font-variant-numeric:tabular-nums;
+  text-shadow:0 1px 3px rgba(0,0,0,.45);
+}
+.hud-cell .v i{
+  font-size:12px;
+  color:#9cc3fb;
+  filter:drop-shadow(0 0 6px rgba(107,163,247,.7));
+}
+.hud-cell[data-type="best"] .v i{color:#ffe9a8;filter:drop-shadow(0 0 6px rgba(255,233,168,.6))}
+.hud-cell[data-type="speed"] .v i{color:#86efac;filter:drop-shadow(0 0 6px rgba(134,239,172,.6))}
+
+/* =========================================================
+   STAGE
+   ========================================================= */
+.stage{
+  position:relative;
+  width:100%;
+  border-radius:var(--radius-l);
+  overflow:hidden;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--glass-border);
+  box-shadow:
+    0 14px 40px rgba(2,10,25,.42),
+    inset 0 1px 0 rgba(255,255,255,.28);
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  contain:paint;
+}
+.stage canvas{
+  width:100%;
+  aspect-ratio:1/1;
+  display:block;
+  touch-action:none;
+  border-radius:inherit;
+}
+
+/* =========================================================
+   OVERLAY
+   ========================================================= */
+.overlay{
+  position:absolute;inset:0;
+  display:grid;place-items:center;
+  padding:22px;
+  background:rgba(6,20,42,.72);
+  backdrop-filter:blur(18px) saturate(1.4);
+  -webkit-backdrop-filter:blur(18px) saturate(1.4);
+  opacity:0;visibility:hidden;
+  transition:opacity .3s var(--ease), visibility .3s var(--ease);
+  z-index:5;
+  text-align:center;
+  border-radius:inherit;
+}
+.overlay.show{opacity:1;visibility:visible}
+.overlay-card{
+  max-width:280px;
+  transform:translateY(10px) scale(.96);
+  transition:transform .45s var(--ease);
+}
+.overlay.show .overlay-card{transform:translateY(0) scale(1)}
+.overlay-icon{
+  width:60px;height:60px;
+  margin:0 auto 14px;
+  border-radius:18px;
+  display:grid;place-items:center;
+  background:linear-gradient(140deg,#4ade80,#0ea56b);
+  box-shadow:
+    0 14px 30px -8px rgba(14,165,107,.7),
+    inset 0 1px 0 rgba(255,255,255,.45),
+    inset 0 -3px 8px rgba(0,0,0,.22);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.30);
+}
+.overlay-icon i{font-size:26px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.3))}
+.overlay h2{
+  font-size:22px;font-weight:800;letter-spacing:-.5px;
+  color:#fff;margin-bottom:8px;
+  text-shadow:0 2px 10px rgba(0,0,0,.5);
+}
+.overlay p{
+  font-size:13px;line-height:1.6;
+  color:var(--text-dim);
+  margin-bottom:18px;
+  text-shadow:0 1px 2px rgba(0,0,0,.4);
+}
+.overlay p b{color:#fff;font-weight:800}
+.score-big{
+  font-size:38px;font-weight:800;letter-spacing:-1.5px;
+  background:linear-gradient(120deg,#c5ddfd,#6ba3f7 50%,#9cc3fb);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  line-height:1;margin-bottom:4px;
+  display:inline-block;
+  font-variant-numeric:tabular-nums;
+  filter:drop-shadow(0 2px 10px rgba(107,163,247,.5));
+}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 24px;
+  border-radius:13px;
+  font-size:14px;font-weight:800;letter-spacing:.2px;
+  color:#fff;
+  background:linear-gradient(135deg,#4ade80,#0ea56b);
+  box-shadow:
+    0 12px 26px -8px rgba(14,165,107,.75),
+    inset 0 1px 0 rgba(255,255,255,.35);
+  border:1px solid rgba(255,255,255,.28);
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+  -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
+}
+.btn:active{transform:scale(.955)}
+.btn i{font-size:13px}
+.btn.ghost{
+  background:rgba(255,255,255,.14);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.30);
+}
+
+/* =========================================================
+   D-PAD
+   ========================================================= */
+.dpad{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  grid-template-rows:repeat(3, 1fr);
+  gap:8px;
+  max-width:250px;
+  width:100%;
+  margin:4px auto 0;
+  aspect-ratio:1/1;
+}
+.dpad button{
+  border-radius:16px;
+  display:grid;place-items:center;
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  color:#fff;
+  box-shadow:
+    0 6px 18px rgba(2,10,25,.32),
+    inset 0 1px 0 rgba(255,255,255,.38);
+  backdrop-filter:blur(12px) saturate(1.5);
+  -webkit-backdrop-filter:blur(12px) saturate(1.5);
+  transition:transform .15s var(--ease), background .15s var(--ease);
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+.dpad button:active{
+  transform:scale(.88);
+  background:rgba(107,163,247,.32);
+}
+.dpad button i{
+  font-size:22px;
+  filter:drop-shadow(0 1px 3px rgba(0,0,0,.4));
+}
+.dpad .up{grid-area:1/2/2/3}
+.dpad .left{grid-area:2/1/3/2}
+.dpad .right{grid-area:2/3/3/4}
+.dpad .down{grid-area:3/2/4/3}
+.dpad .center{
+  grid-area:2/2/3/3;
+  display:grid;place-items:center;
+  font-size:9px;font-weight:800;letter-spacing:.6px;
+  color:var(--text-soft);
+  text-transform:uppercase;
+  pointer-events:none;
+  text-shadow:0 1px 2px rgba(0,0,0,.4);
+}
+
+/* =========================================================
+   HINT
+   ========================================================= */
+.hint{
+  text-align:center;
+  font-size:11px;
+  font-weight:600;
+  color:var(--text-soft);
+  padding:4px 10px 0;
+  line-height:1.5;
+  text-shadow:0 1px 2px rgba(0,0,0,.4);
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:calc(var(--safe-b) + 26px);
+  transform:translate(-50%,20px);
+  padding:10px 18px;
+  border-radius:13px;
+  background:rgba(6,20,42,.92);
+  color:#fff;
+  font-size:13px;font-weight:700;
+  box-shadow:0 16px 34px -10px rgba(0,0,0,.7);
+  opacity:0;visibility:hidden;
+  transition:opacity .3s var(--ease), transform .3s var(--ease), visibility .3s var(--ease);
+  z-index:100;pointer-events:none;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  max-width:88vw;text-align:center;
+  border:1px solid rgba(255,255,255,.15);
+}
+.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.topbar{animation:fadeUp .5s var(--ease) both}
+.hud{animation:fadeUp .5s .06s var(--ease) both}
+.stage{animation:fadeUp .5s .12s var(--ease) both}
+.dpad{animation:fadeUp .5s .18s var(--ease) both}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+  .glass,.icon-btn,.dpad button,.hud-cell{background:rgba(20,40,75,.62)}
+  .overlay{background:rgba(6,20,42,.92)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<main class="shell">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <a class="icon-btn" href="index.html" aria-label="Kembali">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+    </a>
+    <div class="title-box">
+      <h1>Neon Snake</h1>
+      <span>Arcade · Endless</span>
+    </div>
+    <button class="icon-btn" id="pauseBtn" aria-label="Pause">
+      <i class="fa-solid fa-pause" id="pauseIcon" aria-hidden="true"></i>
+    </button>
+  </header>
+
+  <!-- HUD -->
+  <section class="hud">
+    <div class="hud-cell glass" data-type="score">
+      <span class="k">Score</span>
+      <span class="v"><i class="fa-solid fa-star" aria-hidden="true"></i><span id="score">0</span></span>
+    </div>
+    <div class="hud-cell glass" data-type="best">
+      <span class="k">Best</span>
+      <span class="v"><i class="fa-solid fa-crown" aria-hidden="true"></i><span id="best">0</span></span>
+    </div>
+    <div class="hud-cell glass" data-type="speed">
+      <span class="k">Speed</span>
+      <span class="v"><i class="fa-solid fa-bolt" aria-hidden="true"></i><span id="speed">1x</span></span>
+    </div>
+  </section>
+
+  <!-- Stage -->
+  <div class="stage">
+    <canvas id="game"></canvas>
+    <div class="overlay show" id="overlay">
+      <div class="overlay-card">
+        <div class="overlay-icon" id="ovlIconWrap">
+          <i class="fa-solid fa-gamepad" id="ovlIcon" aria-hidden="true"></i>
+        </div>
+        <h2 id="ovlTitle">Neon Snake</h2>
+        <p id="ovlText">Swipe di arena atau pakai D-Pad. Makan apel hijau, jangan tabrak dinding &amp; ekor sendiri.</p>
+        <button class="btn" id="ovlBtn">
+          <i class="fa-solid fa-play" aria-hidden="true"></i>
+          Mulai Main
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- D-Pad -->
+  <div class="dpad" id="dpad">
+    <button class="up" data-dir="up" aria-label="Atas">
+      <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+    </button>
+    <button class="left" data-dir="left" aria-label="Kiri">
+      <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <div class="center">Move</div>
+    <button class="right" data-dir="right" aria-label="Kanan">
+      <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    </button>
+    <button class="down" data-dir="down" aria-label="Bawah">
+      <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <p class="hint">Keyboard: <b>↑↓←→</b> / <b>WASD</b> gerak · <b>Space</b> pause</p>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   NEON SNAKE — GamehubFortechdev
+   ========================================================= */
+(function () {
+  'use strict';
+
+  /* ---------------- Config ---------------- */
+  const COLS = 20;
+  const ROWS = 20;
+  const BASE_TICK = 150;
+  const MIN_TICK  = 62;
+  const TICK_STEP = 4;
+  const STORAGE_KEY = 'gamehubfortechdev.snake.best';
+
+  /* ---------------- DOM ---------------- */
+  const cvs       = document.getElementById('game');
+  const ctx       = cvs.getContext('2d', { alpha: true });
+  const scoreEl   = document.getElementById('score');
+  const bestEl    = document.getElementById('best');
+  const speedEl   = document.getElementById('speed');
+  const overlay   = document.getElementById('overlay');
+  const ovlTitle  = document.getElementById('ovlTitle');
+  const ovlText   = document.getElementById('ovlText');
+  const ovlBtn    = document.getElementById('ovlBtn');
+  const ovlIcon   = document.getElementById('ovlIcon');
+  const pauseBtn  = document.getElementById('pauseBtn');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const toastEl   = document.getElementById('toast');
+
+  /* ---------------- State ---------------- */
+  let size = 320;
+  let cell = 16;
+  let dpr  = 1;
+
+  let snake;
+  let dir;
+  let queuedDirs;
+  let food;
+  let score = 0;
+  let best  = +(localStorage.getItem(STORAGE_KEY) || 0);
+  let tickMs = BASE_TICK;
+  let acc = 0;
+  let lastTime = 0;
+  let rafId = 0;
+  let running = false;
+  let alive = false;
+  let started = false;
+  let particles = [];
+  let shake = 0;
+  let foodPulsePhase = 0;
+
+  bestEl.textContent = best;
+
+  /* ---------------- Helpers ---------------- */
+  function toast(msg, ms = 1500) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toastEl.classList.remove('show'), ms);
+  }
+
+  function roundRect(c, x, y, w, h, r) {
+    const rr = Math.min(r, w / 2, h / 2);
+    c.beginPath();
+    c.moveTo(x + rr, y);
+    c.arcTo(x + w, y,     x + w, y + h, rr);
+    c.arcTo(x + w, y + h, x,     y + h, rr);
+    c.arcTo(x,     y + h, x,     y,     rr);
+    c.arcTo(x,     y,     x + w, y,     rr);
+    c.closePath();
+  }
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  /* ---------------- Sizing ---------------- */
+  function resize() {
+    const rect = cvs.getBoundingClientRect();
+    const cssSize = Math.max(200, Math.floor(rect.width));
+    dpr = Math.min(window.devicePixelRatio || 1, 3);
+
+    cvs.width  = Math.floor(cssSize * dpr);
+    cvs.height = Math.floor(cssSize * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    size = cssSize;
+    cell = size / COLS;
+    draw(0);
+  }
+
+  window.addEventListener('resize', resize);
+  window.addEventListener('orientationchange', () => setTimeout(resize, 120));
+
+  /* ---------------- Game Init ---------------- */
+  function reset() {
+    snake = [
+      { x: 9,  y: 10, px: 9,  py: 10 },
+      { x: 8,  y: 10, px: 8,  py: 10 },
+      { x: 7,  y: 10, px: 7,  py: 10 },
+    ];
+    dir = { x: 1, y: 0 };
+    queuedDirs = [];
+    score = 0;
+    tickMs = BASE_TICK;
+    acc = 0;
+    lastTime = performance.now();
+    particles = [];
+    shake = 0;
+    alive = true;
+    speedEl.textContent = '1x';
+    scoreEl.textContent = '0';
+    spawnFood();
+    foodPulsePhase = 0;
+  }
+
+  function spawnFood() {
+    const free = [];
+    for (let y = 0; y < ROWS; y++) {
+      for (let x = 0; x < COLS; x++) {
+        if (!snake.some(s => s.x === x && s.y === y)) free.push({ x, y });
+      }
+    }
+    if (!free.length) { food = null; return; }
+    const pick = free[(Math.random() * free.length) | 0];
+    food = { x: pick.x, y: pick.y };
+  }
+
+  /* ---------------- Input ---------------- */
+  function setDir(nx, ny) {
+    if (!alive) return;
+    const ref = queuedDirs.length ? queuedDirs[queuedDirs.length - 1] : dir;
+    if (ref.x === -nx && ref.y === -ny) return;
+    if (ref.x === nx && ref.y === ny) return;
+    if (queuedDirs.length >= 2) return;
+    queuedDirs.push({ x: nx, y: ny });
+  }
+
+  const DIRS = {
+    up:    { x: 0,  y: -1 },
+    down:  { x: 0,  y: 1  },
+    left:  { x: -1, y: 0  },
+    right: { x: 1,  y: 0  },
+  };
+
+  document.getElementById('dpad').addEventListener('pointerdown', (e) => {
+    const btn = e.target.closest('button[data-dir]');
+    if (!btn) return;
+    e.preventDefault();
+    const d = DIRS[btn.dataset.dir];
+    if (d) setDir(d.x, d.y);
+    if (!running && alive && started) resume();
+    else if (!started) start();
+  }, { passive: false });
+
+  window.addEventListener('keydown', (e) => {
+    const k = e.key;
+    if (k === 'ArrowUp'    || k === 'w' || k === 'W') { setDir(0, -1); e.preventDefault(); }
+    else if (k === 'ArrowDown'  || k === 's' || k === 'S') { setDir(0,  1); e.preventDefault(); }
+    else if (k === 'ArrowLeft'  || k === 'a' || k === 'A') { setDir(-1, 0); e.preventDefault(); }
+    else if (k === 'ArrowRight' || k === 'd' || k === 'D') { setDir( 1, 0); e.preventDefault(); }
+    else if (k === ' ' || k === 'Spacebar') { e.preventDefault(); togglePause(); }
+    else if (k === 'Enter') {
+      if (!alive) restart();
+      else if (!started) start();
+      else if (!running) resume();
+    }
+  });
+
+  // Swipe
+  (function attachSwipe() {
+    const stage = cvs.parentElement;
+    let sx = 0, sy = 0, active = false, moved = false;
+
+    stage.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('.overlay')) return;
+      active = true; moved = false;
+      sx = e.clientX; sy = e.clientY;
+      try { stage.setPointerCapture(e.pointerId); } catch (_) {}
+    }, { passive: true });
+
+    stage.addEventListener('pointermove', (e) => {
+      if (!active || moved) return;
+      const dx = e.clientX - sx;
+      const dy = e.clientY - sy;
+      const TH = 22;
+      if (Math.abs(dx) < TH && Math.abs(dy) < TH) return;
+      moved = true;
+      if (Math.abs(dx) > Math.abs(dy)) {
+        setDir(dx > 0 ? 1 : -1, 0);
+      } else {
+        setDir(0, dy > 0 ? 1 : -1);
+      }
+      sx = e.clientX; sy = e.clientY;
+      setTimeout(() => { moved = false; }, 30);
+    }, { passive: true });
+
+    const end = () => { active = false; moved = false; };
+    stage.addEventListener('pointerup', end, { passive: true });
+    stage.addEventListener('pointercancel', end, { passive: true });
+  })();
+
+  /* ---------------- Loop ---------------- */
+  function start() {
+    reset();
+    started = true;
+    overlay.classList.remove('show');
+    running = true;
+    updatePauseIcon();
+    lastTime = performance.now();
+    acc = 0;
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function resume() {
+    if (!alive) return;
+    overlay.classList.remove('show');
+    running = true;
+    updatePauseIcon();
+    lastTime = performance.now();
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function pause() {
+    if (!running || !alive) return;
+    running = false;
+    cancelAnimationFrame(rafId);
+    showOverlay('pause');
+  }
+
+  function togglePause() {
+    if (!started || !alive) return;
+    if (running) pause();
+    else resume();
+  }
+
+  function restart() {
+    started = true;
+    reset();
+    overlay.classList.remove('show');
+    running = true;
+    updatePauseIcon();
+    lastTime = performance.now();
+    acc = 0;
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function updatePauseIcon() {
+    pauseIcon.className = running ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+  }
+
+  function loop(now) {
+    if (!running) return;
+    let dt = now - lastTime;
+    lastTime = now;
+    if (dt > 250) dt = 250;
+    acc += dt;
+    foodPulsePhase += dt * 0.005;
+
+    let steps = 0;
+    while (acc >= tickMs && steps < 4) {
+      acc -= tickMs;
+      step();
+      steps++;
+      if (!alive) break;
+    }
+    draw(alive ? acc / tickMs : 1);
+    if (shake > 0) shake = Math.max(0, shake - dt * 0.02);
+
+    rafId = requestAnimationFrame(loop);
+  }
+
+  /* ---------------- Step ---------------- */
+  function step() {
+    if (queuedDirs.length) {
+      const nd = queuedDirs.shift();
+      if (!(dir.x === -nd.x && dir.y === -nd.y)) dir = nd;
+    }
+
+    for (const s of snake) { s.px = s.x; s.py = s.y; }
+
+    const head = snake[0];
+    const nx = head.x + dir.x;
+    const ny = head.y + dir.y;
+
+    if (nx < 0 || ny < 0 || nx >= COLS || ny >= ROWS) { die(); return; }
+
+    const willGrow = food && nx === food.x && ny === food.y;
+    const limit = willGrow ? snake.length : snake.length - 1;
+    for (let i = 0; i < limit; i++) {
+      if (snake[i].x === nx && snake[i].y === ny) { die(); return; }
+    }
+
+    const newHead = { x: nx, y: ny, px: head.x, py: head.y };
+    snake.unshift(newHead);
+
+    if (willGrow) {
+      score += 10;
+      scoreEl.textContent = score;
+      burst(food.x, food.y);
+      spawnFood();
+      tickMs = Math.max(MIN_TICK, BASE_TICK - (score / 10) * TICK_STEP);
+      const spd = (BASE_TICK / tickMs).toFixed(1).replace(/\.0$/, '');
+      speedEl.textContent = spd + 'x';
+      if (score > best) {
+        best = score;
+        bestEl.textContent = best;
+        try { localStorage.setItem(STORAGE_KEY, String(best)); } catch (_) {}
+      }
+    } else {
+      snake.pop();
+    }
+  }
+
+  function die() {
+    alive = false;
+    running = false;
+    cancelAnimationFrame(rafId);
+    shake = 14;
+    burst(snake[0].x, snake[0].y, 22);
+    updatePauseIcon();
+    draw(1);
+    if (score > best) {
+      best = score;
+      bestEl.textContent = best;
+      try { localStorage.setItem(STORAGE_KEY, String(best)); } catch (_) {}
+    }
+    setTimeout(() => showOverlay('over'), 420);
+  }
+
+  /* ---------------- Particles ---------------- */
+  function burst(gx, gy, n = 10) {
+    const cx = (gx + 0.5) * cell;
+    const cy = (gy + 0.5) * cell;
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const sp = 1.2 + Math.random() * 2.4;
+      particles.push({
+        x: cx, y: cy,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp,
+        life: 1,
+        decay: 0.018 + Math.random() * 0.02,
+        r: 1.6 + Math.random() * 2.4,
+        hue: 140 + Math.random() * 60,
+      });
+    }
+  }
+
+  function updateParticles() {
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.94;
+      p.vy *= 0.94;
+      p.vy += 0.06;
+      p.life -= p.decay;
+      if (p.life <= 0) particles.splice(i, 1);
+    }
+  }
+
+  /* ---------------- Draw ---------------- */
+  function draw(t = 0) {
+    ctx.save();
+
+    if (shake > 0.4) {
+      const m = shake;
+      ctx.translate((Math.random() - 0.5) * m, (Math.random() - 0.5) * m);
+    }
+
+    drawBoard();
+    if (food) drawFood();
+    drawSnake(t);
+    drawParticles();
+
+    ctx.restore();
+  }
+
+  function drawBoard() {
+    // base: dark gradient biar serasi dengan tema liquid glass
+    const g = ctx.createLinearGradient(0, 0, size, size);
+    g.addColorStop(0, 'rgba(15,40,80,.55)');
+    g.addColorStop(0.5, 'rgba(8,24,50,.65)');
+    g.addColorStop(1, 'rgba(6,18,38,.75)');
+    ctx.fillStyle = g;
+    ctx.fillRect(-20, -20, size + 40, size + 40);
+
+    // subtle grid
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(107,163,247,.10)';
+    ctx.beginPath();
+    for (let i = 1; i < COLS; i++) {
+      const p = Math.round(i * cell) + 0.5;
+      ctx.moveTo(p, 0); ctx.lineTo(p, size);
+    }
+    for (let i = 1; i < ROWS; i++) {
+      const p = Math.round(i * cell) + 0.5;
+      ctx.moveTo(0, p); ctx.lineTo(size, p);
+    }
+    ctx.stroke();
+
+    // border glow halus
+    ctx.strokeStyle = 'rgba(107,163,247,.22)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(1, 1, size - 2, size - 2);
+
+    // radial vignette
+    const r = ctx.createRadialGradient(size / 2, size / 2, size * 0.28, size / 2, size / 2, size * 0.8);
+    r.addColorStop(0, 'rgba(107,163,247,0)');
+    r.addColorStop(1, 'rgba(107,163,247,.10)');
+    ctx.fillStyle = r;
+    ctx.fillRect(0, 0, size, size);
+  }
+
+  function drawFood() {
+    const pulse = 1 + Math.sin(foodPulsePhase) * 0.09;
+    const cx = (food.x + 0.5) * cell;
+    const cy = (food.y + 0.5) * cell;
+    const R = cell * 0.34 * pulse;
+
+    // halo
+    const halo = ctx.createRadialGradient(cx, cy, R * 0.4, cx, cy, R * 2.8);
+    halo.addColorStop(0, 'rgba(34,197,94,.42)');
+    halo.addColorStop(1, 'rgba(34,197,94,0)');
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R * 2.8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // body
+    const g = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.15, cx, cy, R * 1.15);
+    g.addColorStop(0, '#86efac');
+    g.addColorStop(0.5, '#22c55e');
+    g.addColorStop(1, '#15803d');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fill();
+
+    // shine
+    ctx.fillStyle = 'rgba(255,255,255,.75)';
+    ctx.beginPath();
+    ctx.arc(cx - R * 0.32, cy - R * 0.36, R * 0.28, 0, Math.PI * 2);
+    ctx.fill();
+
+    // leaf
+    ctx.fillStyle = '#16a34a';
+    ctx.beginPath();
+    ctx.ellipse(cx + R * 0.55, cy - R * 0.85, R * 0.32, R * 0.16, -0.7, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawSnake(t) {
+    const n = snake.length;
+    const pad = cell * 0.09;
+    const radius = cell * 0.28;
+
+    for (let i = n - 1; i >= 0; i--) {
+      const s = snake[i];
+      const dxAbs = Math.abs(s.x - s.px);
+      const dyAbs = Math.abs(s.y - s.py);
+      const fx = (dxAbs > 1 || dyAbs > 1) ? s.x : lerp(s.px, s.x, t);
+      const fy = (dxAbs > 1 || dyAbs > 1) ? s.y : lerp(s.py, s.y, t);
+
+      const x = fx * cell + pad;
+      const y = fy * cell + pad;
+      const w = cell - pad * 2;
+      const h = cell - pad * 2;
+
+      const k = n <= 1 ? 0 : i / (n - 1);
+
+      const r1 = Math.round(lerp(74, 13, k));
+      const g1 = Math.round(lerp(222, 148, k));
+      const b1 = Math.round(lerp(128, 136, k));
+
+      ctx.fillStyle = `rgb(${r1},${g1},${b1})`;
+      ctx.shadowColor = i === 0 ? 'rgba(74,222,128,.75)' : 'rgba(34,197,94,.30)';
+      ctx.shadowBlur = i === 0 ? 16 : 7;
+      ctx.shadowOffsetY = i === 0 ? 2 : 1;
+
+      roundRect(ctx, x, y, w, h, radius);
+      ctx.fill();
+
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+
+      const hg = ctx.createLinearGradient(x, y, x, y + h);
+      hg.addColorStop(0, 'rgba(255,255,255,.42)');
+      hg.addColorStop(0.55, 'rgba(255,255,255,.06)');
+      hg.addColorStop(1, 'rgba(0,0,0,.10)');
+      ctx.fillStyle = hg;
+      roundRect(ctx, x, y, w, h, radius);
+      ctx.fill();
+
+      if (i === 0) drawEyes(fx, fy);
+    }
+  }
+
+  function drawEyes(gx, gy) {
+    const cx = (gx + 0.5) * cell;
+    const cy = (gy + 0.5) * cell;
+    const off = cell * 0.16;
+    const eyeR = Math.max(1.4, cell * 0.085);
+    const pupilR = Math.max(0.8, cell * 0.045);
+
+    const px = dir.y !== 0 ? 1 : 0;
+    const py = dir.x !== 0 ? 1 : 0;
+
+    const e1x = cx + px * off + dir.x * off * 0.7;
+    const e1y = cy + py * off + dir.y * off * 0.7;
+    const e2x = cx - px * off + dir.x * off * 0.7;
+    const e2y = cy - py * off + dir.y * off * 0.7;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(e1x, e1y, eyeR, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(e2x, e2y, eyeR, 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = '#0d2949';
+    ctx.beginPath(); ctx.arc(e1x + dir.x * eyeR * 0.3, e1y + dir.y * eyeR * 0.3, pupilR, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(e2x + dir.x * eyeR * 0.3, e2y + dir.y * eyeR * 0.3, pupilR, 0, Math.PI * 2); ctx.fill();
+  }
+
+  function drawParticles() {
+    updateParticles();
+    for (const p of particles) {
+      ctx.globalAlpha = Math.max(0, p.life);
+      ctx.fillStyle = `hsl(${p.hue}, 80%, ${48 + p.life * 15}%)`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* ---------------- Overlay UI ---------------- */
+  function setOvlIcon(faClass) {
+    ovlIcon.className = 'fa-solid ' + faClass;
+  }
+
+  function showOverlay(kind) {
+    if (kind === 'pause') {
+      ovlTitle.textContent = 'Paused';
+      ovlText.innerHTML = `Skor sementara: <b>${score}</b>`;
+      setOvlIcon('fa-pause');
+      ovlBtn.innerHTML = '<i class="fa-solid fa-play" aria-hidden="true"></i> Lanjut';
+      ovlBtn.onclick = () => resume();
+    } else if (kind === 'over') {
+      const isBest = score > 0 && score >= best;
+      ovlTitle.textContent = isBest ? 'New Best!' : 'Game Over';
+      ovlText.innerHTML =
+        `<span class="score-big">${score}</span><br>` +
+        (isBest ? 'Rekor baru tercatat.' : `Best kamu: <b>${best}</b>`);
+      setOvlIcon(isBest ? 'fa-crown' : 'fa-rotate-right');
+      ovlBtn.innerHTML = '<i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Main Lagi';
+      ovlBtn.onclick = () => restart();
+    } else {
+      ovlTitle.textContent = 'Neon Snake';
+      ovlText.textContent = 'Swipe di arena atau pakai D-Pad. Makan apel hijau, jangan tabrak dinding & ekor sendiri.';
+      setOvlIcon('fa-gamepad');
+      ovlBtn.innerHTML = '<i class="fa-solid fa-play" aria-hidden="true"></i> Mulai Main';
+      ovlBtn.onclick = () => start();
+    }
+    overlay.classList.add('show');
+    updatePauseIcon();
+  }
+
+  pauseBtn.addEventListener('click', togglePause);
+
+  /* ---------------- Visibility ---------------- */
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && running) pause();
+  });
+
+  /* ---------------- Prevent double tap zoom ---------------- */
+  let lastTouch = 0;
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouch < 320) e.preventDefault();
+    lastTouch = now;
+  }, { passive: false });
+
+  document.querySelectorAll('img, video, svg').forEach((el) => el.setAttribute('draggable', 'false'));
+
+  /* ---------------- Boot ---------------- */
+  reset();
+  resize();
+  requestAnimationFrame(() => { resize(); });
+  ovlBtn.onclick = () => start();
+
+})();
+</script>
+</body>
+</html>
