@@ -18,14 +18,16 @@
 
 <style>
 /* =========================================================
-   OFF-ROAD JEEP 3D — Liquid Glass UI
+   OFF-ROAD JEEP 3D — Liquid Glass UI v2
    ========================================================= */
 :root{
   --text:#f4f9ff;
   --text-dim:rgba(244,249,255,.72);
   --text-soft:rgba(244,249,255,.52);
-  --glass:rgba(20,40,75,.45);
+  --glass:rgba(20,40,75,.52);
+  --glass-2:rgba(20,40,75,.65);
   --glass-border:rgba(255,255,255,.22);
+  --glass-hi:rgba(255,255,255,.35);
   --ease:cubic-bezier(.22,.9,.28,1);
   --safe-t:env(safe-area-inset-top,0px);
   --safe-b:env(safe-area-inset-bottom,0px);
@@ -53,14 +55,17 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 
 .glass{
   background:var(--glass);
-  backdrop-filter:blur(14px) saturate(1.6);
-  -webkit-backdrop-filter:blur(14px) saturate(1.6);
+  backdrop-filter:blur(16px) saturate(1.7);
+  -webkit-backdrop-filter:blur(16px) saturate(1.7);
   border:1px solid var(--glass-border);
   box-shadow:
-    0 8px 24px rgba(2,10,25,.4),
+    0 8px 24px rgba(2,10,25,.42),
     inset 0 1px 0 rgba(255,255,255,.28);
 }
 
+/* =========================================================
+   TOPBAR
+   ========================================================= */
 .topbar{
   position:fixed;
   top:calc(var(--safe-t) + 12px);
@@ -105,63 +110,147 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   text-shadow:0 1px 2px rgba(0,0,0,.4);
 }
 
+/* =========================================================
+   SPEEDOMETER — naik dari bawah
+   ========================================================= */
 .speedo{
   position:fixed;
-  left:calc(var(--safe-l) + 12px);
-  bottom:calc(var(--safe-b) + 118px);
-  width:96px;height:96px;
+  left:calc(var(--safe-l) + 14px);
+  bottom:calc(var(--safe-b) + 218px);
+  width:104px;height:104px;
   border-radius:50%;
   z-index:10;
   padding:6px;
   display:grid;place-items:center;
   pointer-events:none;
+  box-shadow:
+    0 10px 26px rgba(2,10,25,.5),
+    inset 0 1px 0 rgba(255,255,255,.28),
+    inset 0 -2px 8px rgba(0,0,0,.25);
 }
 .speedo svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(135deg)}
 .speedo svg circle{fill:none;stroke-linecap:round}
-.speedo .track{stroke:rgba(255,255,255,.15);stroke-width:8}
+.speedo .track{stroke:rgba(255,255,255,.12);stroke-width:7}
+.speedo .ticks{stroke:rgba(255,255,255,.20);stroke-width:2}
 .speedo .fill{
-  stroke:#6ba3f7;stroke-width:8;
+  stroke:#6ba3f7;stroke-width:7;
   stroke-dasharray:220;stroke-dashoffset:220;
-  transition:stroke-dashoffset .12s linear;
-  filter:drop-shadow(0 0 6px rgba(107,163,247,.8));
+  transition:stroke-dashoffset .12s linear, stroke .3s ease;
+  filter:drop-shadow(0 0 8px rgba(107,163,247,.9));
 }
 .speedo .txt{text-align:center;line-height:1;z-index:1}
 .speedo .txt b{
-  display:block;font-size:22px;font-weight:900;letter-spacing:-1px;
+  display:block;font-size:23px;font-weight:900;letter-spacing:-1px;
   color:#fff;
-  text-shadow:0 1px 4px rgba(0,0,0,.6);
+  text-shadow:0 2px 6px rgba(0,0,0,.7);
   font-variant-numeric:tabular-nums;
 }
 .speedo .txt span{
-  font-size:9px;font-weight:800;letter-spacing:.8px;
+  font-size:8.5px;font-weight:800;letter-spacing:.9px;
   text-transform:uppercase;
   color:var(--text-soft);
   text-shadow:0 1px 2px rgba(0,0,0,.5);
 }
+
+/* =========================================================
+   GEAR — di kanan speedo
+   ========================================================= */
 .gear{
   position:fixed;
-  left:calc(var(--safe-l) + 116px);
-  bottom:calc(var(--safe-b) + 138px);
-  padding:6px 10px;
-  border-radius:10px;
-  font-size:11px;
+  left:calc(var(--safe-l) + 128px);
+  bottom:calc(var(--safe-b) + 244px);
+  padding:8px 14px;
+  border-radius:12px;
+  font-size:13px;
   font-weight:900;
-  letter-spacing:.8px;
+  letter-spacing:1px;
   color:#fff;
   z-index:10;
   pointer-events:none;
-  text-shadow:0 1px 2px rgba(0,0,0,.5);
-  min-width:34px;text-align:center;
+  text-shadow:0 2px 4px rgba(0,0,0,.6);
+  min-width:44px;
+  text-align:center;
+  transition:color .3s ease;
+  box-shadow:
+    0 8px 20px rgba(2,10,25,.5),
+    inset 0 1px 0 rgba(255,255,255,.25);
+}
+.gear::before{
+  content:'';
+  position:absolute;
+  left:50%;bottom:-4px;
+  transform:translateX(-50%);
+  width:6px;height:6px;
+  border-radius:50%;
+  background:currentColor;
+  box-shadow:0 0 8px currentColor;
 }
 .gear[data-state="D"]{color:#86efac}
 .gear[data-state="R"]{color:#fca5a5}
 .gear[data-state="N"]{color:#fde68a}
 
+/* =========================================================
+   RPM BAR — di atas kontrol
+   ========================================================= */
+.rpm-bar{
+  position:fixed;
+  left:calc(var(--safe-l) + 14px);
+  right:calc(var(--safe-r) + 14px);
+  bottom:calc(var(--safe-b) + 190px);
+  height:6px;
+  border-radius:99px;
+  z-index:10;
+  pointer-events:none;
+  overflow:hidden;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.35);
+}
+.rpm-fill{
+  height:100%;
+  width:0%;
+  border-radius:99px;
+  background:linear-gradient(90deg,#6ba3f7 0%,#86efac 40%,#fde68a 70%,#f87171 100%);
+  transition:width .12s linear;
+  box-shadow:0 0 10px rgba(134,239,172,.6);
+  position:relative;
+}
+.rpm-fill::after{
+  content:'';
+  position:absolute;
+  right:0;top:0;bottom:0;
+  width:8px;
+  background:rgba(255,255,255,.9);
+  filter:blur(3px);
+  border-radius:99px;
+}
+
+/* =========================================================
+   BOTTOM GRADIENT — readability overlay
+   ========================================================= */
+.bottom-grad{
+  position:fixed;
+  left:0;right:0;bottom:0;
+  height:240px;
+  z-index:5;
+  pointer-events:none;
+  background:linear-gradient(
+    180deg,
+    rgba(6,18,38,0) 0%,
+    rgba(6,18,38,.30) 40%,
+    rgba(6,18,38,.65) 75%,
+    rgba(6,18,38,.85) 100%
+  );
+}
+
+/* =========================================================
+   CONTROLS — panel, naik dari bawah
+   ========================================================= */
 .controls{
   position:fixed;
   left:calc(var(--safe-l) + 12px);
   right:calc(var(--safe-r) + 12px);
-  bottom:calc(var(--safe-b) + 14px);
+  bottom:calc(var(--safe-b) + 24px);
   display:flex;
   justify-content:space-between;
   align-items:flex-end;
@@ -169,59 +258,161 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   z-index:10;
   pointer-events:none;
 }
-.steer{display:flex;gap:8px;pointer-events:auto}
-.steer button{
-  width:60px;height:60px;
-  border-radius:16px;
-  display:grid;place-items:center;
-  background:var(--glass);
-  border:1px solid var(--glass-border);
-  color:#fff;
-  box-shadow:
-    0 6px 18px rgba(2,10,25,.4),
-    inset 0 1px 0 rgba(255,255,255,.30);
-  backdrop-filter:blur(12px) saturate(1.5);
-  -webkit-backdrop-filter:blur(12px) saturate(1.5);
-  transition:transform .12s var(--ease), background .12s var(--ease);
-}
-.steer button.active{background:rgba(107,163,247,.45);transform:scale(.94)}
-.steer button i{font-size:22px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.45))}
 
-.pedals{display:flex;gap:8px;align-items:flex-end;pointer-events:auto}
-.pedals button{
-  border-radius:16px;
-  display:grid;place-items:center;
-  color:#fff;
+/* --- Steering panel --- */
+.steer-panel{
+  display:flex;
+  gap:8px;
+  padding:8px;
+  border-radius:20px;
+  pointer-events:auto;
+  background:var(--glass-2);
   border:1px solid var(--glass-border);
+  backdrop-filter:blur(16px) saturate(1.7);
+  -webkit-backdrop-filter:blur(16px) saturate(1.7);
   box-shadow:
-    0 6px 18px rgba(2,10,25,.4),
-    inset 0 1px 0 rgba(255,255,255,.30);
-  backdrop-filter:blur(12px) saturate(1.5);
-  -webkit-backdrop-filter:blur(12px) saturate(1.5);
-  transition:transform .12s var(--ease), background .12s var(--ease);
-  flex-direction:column;gap:2px;
+    0 10px 28px rgba(2,10,25,.45),
+    inset 0 1px 0 rgba(255,255,255,.28),
+    inset 0 -2px 8px rgba(0,0,0,.22);
 }
+.steer-panel button{
+  width:62px;height:62px;
+  border-radius:15px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  background:linear-gradient(160deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.24);
+  color:#fff;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.35),
+    inset 0 -3px 6px rgba(0,0,0,.18);
+  transition:transform .1s var(--ease), background .1s var(--ease), box-shadow .1s var(--ease);
+  position:relative;
+  overflow:hidden;
+}
+.steer-panel button::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:radial-gradient(circle at 50% 15%, rgba(255,255,255,.28) 0%, transparent 55%);
+  pointer-events:none;
+}
+.steer-panel button i{
+  font-size:22px;
+  filter:drop-shadow(0 1px 3px rgba(0,0,0,.5));
+}
+.steer-panel button .lbl{
+  font-size:8.5px;
+  font-weight:800;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.72);
+  text-shadow:0 1px 2px rgba(0,0,0,.6);
+}
+.steer-panel button.active{
+  background:linear-gradient(160deg, rgba(107,163,247,.55), rgba(59,130,246,.35));
+  box-shadow:
+    0 2px 6px rgba(0,0,0,.35),
+    inset 0 2px 4px rgba(0,0,0,.25),
+    inset 0 -1px 2px rgba(255,255,255,.15);
+  transform:scale(.94);
+}
+
+/* --- Pedal panel --- */
+.pedals{
+  display:flex;
+  gap:8px;
+  align-items:flex-end;
+  padding:8px;
+  border-radius:20px;
+  pointer-events:auto;
+  background:var(--glass-2);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(16px) saturate(1.7);
+  -webkit-backdrop-filter:blur(16px) saturate(1.7);
+  box-shadow:
+    0 10px 28px rgba(2,10,25,.45),
+    inset 0 1px 0 rgba(255,255,255,.28),
+    inset 0 -2px 8px rgba(0,0,0,.22);
+}
+.pedals button{
+  border-radius:15px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.24);
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.35),
+    inset 0 -3px 6px rgba(0,0,0,.20);
+  transition:transform .1s var(--ease), background .1s var(--ease), box-shadow .1s var(--ease);
+  position:relative;
+  overflow:hidden;
+}
+.pedals button::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:radial-gradient(circle at 50% 15%, rgba(255,255,255,.28) 0%, transparent 55%);
+  pointer-events:none;
+}
+.pedals button i{
+  font-size:18px;
+  filter:drop-shadow(0 1px 3px rgba(0,0,0,.5));
+}
+.pedals button .lbl{
+  font-size:8.5px;
+  font-weight:800;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  text-shadow:0 1px 2px rgba(0,0,0,.6);
+}
+
+/* HB kecil */
 .pedals .hb{
-  width:50px;height:50px;
-  background:rgba(255,255,255,.10);
-  font-size:9px;font-weight:800;letter-spacing:.5px;
+  width:48px;height:48px;
+  background:linear-gradient(160deg, rgba(253,230,138,.28), rgba(253,230,138,.10));
 }
+.pedals .hb .lbl{color:rgba(253,230,138,.95)}
+
+/* BRAKE medium */
 .pedals .brake{
   width:60px;height:60px;
-  background:rgba(217,79,107,.30);
-  font-size:9px;font-weight:800;letter-spacing:.5px;
+  background:linear-gradient(160deg, rgba(217,79,107,.38), rgba(217,79,107,.15));
 }
-.pedals .gas{
-  width:70px;height:70px;
-  background:rgba(34,197,94,.28);
-  font-size:10px;font-weight:800;letter-spacing:.5px;
-}
-.pedals button.active{transform:scale(.92)}
-.pedals .gas.active{background:rgba(34,197,94,.55)}
-.pedals .brake.active{background:rgba(217,79,107,.55)}
-.pedals .hb.active{background:rgba(255,233,168,.5)}
-.pedals button i{font-size:20px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.45))}
+.pedals .brake .lbl{color:rgba(252,165,165,.95)}
 
+/* GAS besar */
+.pedals .gas{
+  width:74px;height:74px;
+  background:linear-gradient(160deg, rgba(34,197,94,.38), rgba(34,197,94,.15));
+}
+.pedals .gas .lbl{color:rgba(134,239,172,.95)}
+.pedals .gas i{font-size:22px}
+
+.pedals button.active{
+  transform:scale(.93);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,.35),
+    inset 0 2px 5px rgba(0,0,0,.30),
+    inset 0 -1px 2px rgba(255,255,255,.15);
+}
+.pedals .gas.active{background:linear-gradient(160deg, rgba(34,197,94,.70), rgba(34,197,94,.42))}
+.pedals .brake.active{background:linear-gradient(160deg, rgba(217,79,107,.70), rgba(217,79,107,.42))}
+.pedals .hb.active{background:linear-gradient(160deg, rgba(253,230,138,.70), rgba(253,230,138,.42))}
+
+/* =========================================================
+   OVERLAY
+   ========================================================= */
 .overlay{
   position:fixed;inset:0;
   z-index:50;
@@ -291,14 +482,17 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 .btn:active{transform:scale(.955)}
 .btn i{font-size:13px}
 
+/* =========================================================
+   TOAST
+   ========================================================= */
 .toast{
   position:fixed;
   left:50%;
-  bottom:calc(var(--safe-b) + 190px);
+  bottom:calc(var(--safe-b) + 300px);
   transform:translate(-50%,20px);
   padding:10px 18px;
   border-radius:13px;
-  background:rgba(6,20,42,.92);
+  background:rgba(6,20,42,.94);
   color:#fff;
   font-size:13px;font-weight:700;
   opacity:0;visibility:hidden;
@@ -308,14 +502,41 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   -webkit-backdrop-filter:blur(10px);
   max-width:88vw;text-align:center;
   border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 12px 28px rgba(0,0,0,.5);
 }
 .toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
 
+/* =========================================================
+   TABLET+
+   ========================================================= */
 @media (min-width:640px){
-  .steer button{width:64px;height:64px}
-  .pedals .gas{width:74px;height:74px}
-  .pedals .brake{width:64px;height:64px}
+  .speedo{width:118px;height:118px;bottom:calc(var(--safe-b) + 240px);left:calc(var(--safe-l) + 20px)}
+  .speedo .txt b{font-size:26px}
+  .gear{left:calc(var(--safe-l) + 152px);bottom:calc(var(--safe-b) + 268px);font-size:14px;padding:9px 16px}
+  .rpm-bar{bottom:calc(var(--safe-b) + 210px);height:7px}
+  .controls{bottom:calc(var(--safe-b) + 32px);gap:16px}
+  .steer-panel{padding:10px;gap:10px}
+  .steer-panel button{width:70px;height:70px}
+  .steer-panel button i{font-size:24px}
+  .pedals{padding:10px;gap:10px}
+  .pedals .gas{width:82px;height:82px}
+  .pedals .brake{width:68px;height:68px}
+  .pedals .hb{width:54px;height:54px}
 }
+
+/* landscape HP — kompresi vertikal */
+@media (max-height:500px) and (orientation:landscape){
+  .speedo{width:80px;height:80px;bottom:calc(var(--safe-b) + 12px);top:auto}
+  .speedo .txt b{font-size:18px}
+  .gear{left:calc(var(--safe-l) + 100px);bottom:calc(var(--safe-b) + 26px)}
+  .rpm-bar{display:none}
+  .controls{bottom:calc(var(--safe-b) + 12px)}
+  .steer-panel button{width:56px;height:56px}
+  .pedals .gas{width:62px;height:62px}
+  .pedals .brake{width:52px;height:52px}
+  .pedals .hb{width:42px;height:42px}
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;}
 }
@@ -325,6 +546,8 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 <body>
 
 <canvas id="scene"></canvas>
+
+<div class="bottom-grad"></div>
 
 <header class="topbar glass">
   <a class="icon-btn" href="index.html" aria-label="Kembali">
@@ -339,9 +562,17 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   </button>
 </header>
 
+<!-- Speedometer -->
 <div class="speedo glass" id="speedo">
   <svg viewBox="0 0 100 100">
     <circle class="track" cx="50" cy="50" r="35" />
+    <g class="ticks">
+      <line x1="50" y1="8" x2="50" y2="14" />
+      <line x1="85" y1="30" x2="79" y2="34" />
+      <line x1="85" y1="70" x2="79" y2="66" />
+      <line x1="15" y1="30" x2="21" y2="34" />
+      <line x1="15" y1="70" x2="21" y2="66" />
+    </g>
     <circle class="fill" id="speedFill" cx="50" cy="50" r="35" />
   </svg>
   <div class="txt">
@@ -349,31 +580,44 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     <span>km/h</span>
   </div>
 </div>
+
+<!-- Gear -->
 <div class="gear glass" id="gearBox" data-state="N">N</div>
 
+<!-- RPM bar -->
+<div class="rpm-bar">
+  <div class="rpm-fill" id="rpmFill"></div>
+</div>
+
+<!-- Controls -->
 <div class="controls">
-  <div class="steer">
+
+  <div class="steer-panel">
     <button id="btnLeft" aria-label="Kiri">
       <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+      <span class="lbl">Left</span>
     </button>
     <button id="btnRight" aria-label="Kanan">
       <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+      <span class="lbl">Right</span>
     </button>
   </div>
+
   <div class="pedals">
     <button class="hb" id="btnHB" aria-label="Handbrake">
       <i class="fa-solid fa-hand" aria-hidden="true"></i>
-      HB
+      <span class="lbl">HB</span>
     </button>
     <button class="brake" id="btnBrake" aria-label="Rem">
       <i class="fa-solid fa-circle-stop" aria-hidden="true"></i>
-      REM
+      <span class="lbl">Rem</span>
     </button>
     <button class="gas" id="btnGas" aria-label="Gas">
       <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
-      GAS
+      <span class="lbl">Gas</span>
     </button>
   </div>
+
 </div>
 
 <div class="toast" id="toast"></div>
@@ -418,6 +662,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   const spdValEl  = document.getElementById('spdVal');
   const speedFill = document.getElementById('speedFill');
   const gearBox   = document.getElementById('gearBox');
+  const rpmFill   = document.getElementById('rpmFill');
   const statusTxt = document.getElementById('statusTxt');
   const camBtn    = document.getElementById('camBtn');
   const toastEl   = document.getElementById('toast');
@@ -777,10 +1022,9 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     return g;
   }
 
-  /* ---------------- SCATTER MAP ---------------- */
+  /* ---------------- SCATTER ---------------- */
   const obstacles = [];
 
-  // TREES
   for (let i = 0; i < 90; i++) {
     const x = (Math.random() - 0.5) * MAP_SIZE * 0.95;
     const z = (Math.random() - 0.5) * MAP_SIZE * 0.95;
@@ -791,10 +1035,9 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     const s = 0.75 + Math.random() * 0.7;
     t.scale.setScalar(s);
     scene.add(t);
-    obstacles.push({ x, z, r: 0.55 * s, type: 'tree' });
+    obstacles.push({ x, z, r: 0.55 * s });
   }
 
-  // ROCKS
   for (let i = 0; i < 40; i++) {
     const x = (Math.random() - 0.5) * MAP_SIZE * 0.95;
     const z = (Math.random() - 0.5) * MAP_SIZE * 0.95;
@@ -803,10 +1046,9 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     r.position.set(x, 0.3, z);
     r.rotation.y = Math.random() * Math.PI * 2;
     scene.add(r);
-    obstacles.push({ x, z, r: 0.6, type: 'rock' });
+    obstacles.push({ x, z, r: 0.6 });
   }
 
-  // BUILDINGS
   const buildColors = [0xa87f5b, 0x8b9aa8, 0xb5a17d, 0x7a8b9c];
   const buildPositions = [
     [-45, -45], [-38, -52], [-30, -40],
@@ -822,10 +1064,9 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     b.position.set(x, 0, z);
     b.rotation.y = Math.random() * Math.PI * 2;
     scene.add(b);
-    obstacles.push({ x, z, r: Math.max(w, d) * 0.55, type: 'building' });
+    obstacles.push({ x, z, r: Math.max(w, d) * 0.55 });
   });
 
-  // BARRELS
   for (let i = 0; i < 24; i++) {
     const x = (Math.random() - 0.5) * MAP_SIZE * 0.8;
     const z = (Math.random() - 0.5) * MAP_SIZE * 0.8;
@@ -833,10 +1074,9 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     const b = makeBarrel();
     b.position.set(x, 0, z);
     scene.add(b);
-    obstacles.push({ x, z, r: 0.45, type: 'barrel' });
+    obstacles.push({ x, z, r: 0.45 });
   }
 
-  // FENCES
   const fenceN = makeFence(MAP_SIZE);
   fenceN.position.set(0, 0, -MAP_SIZE / 2);
   scene.add(fenceN);
@@ -854,9 +1094,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 
   statusTxt.textContent = 'Siap';
 
-  /* =========================================================
-     JEEP
-     ========================================================= */
+  /* ---------------- JEEP ---------------- */
   const jeep = new THREE.Group();
   scene.add(jeep);
 
@@ -875,21 +1113,18 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   const tailMat      = new THREE.MeshStandardMaterial({ color: 0xff2222, emissive: 0xff3333, emissiveIntensity: 1.4 });
   const amberMat     = new THREE.MeshStandardMaterial({ color: 0xffb347, emissive: 0xff8c00, emissiveIntensity: 1.2 });
 
-  // Chassis
   const chassis = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.28, 3.7), paintDarkMat);
   chassis.position.y = 0.58;
   chassis.castShadow = true;
   chassis.receiveShadow = true;
   chassisGroup.add(chassis);
 
-  // Body
   const bodyLow = new THREE.Mesh(new THREE.BoxGeometry(1.78, 0.55, 3.55), paintMat);
   bodyLow.position.y = 0.92;
   bodyLow.castShadow = true;
   bodyLow.receiveShadow = true;
   chassisGroup.add(bodyLow);
 
-  // Hood
   const hood = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.18, 1.35), paintMat);
   hood.position.set(0, 1.28, -1.1);
   hood.castShadow = true;
@@ -900,7 +1135,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   hoodRidge.position.set(0, 1.4, -1.1);
   chassisGroup.add(hoodRidge);
 
-  // Fenders
   [-1, 1].forEach((s) => {
     const fender = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.24, 1.5), paintMat);
     fender.position.set(s * 0.9, 1.02, -1.15);
@@ -913,28 +1147,24 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(rearFender);
   });
 
-  // Cabin
   const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.72, 1.0, 1.55), paintMat);
   cabin.position.set(0, 1.5, 0.55);
   cabin.castShadow = true;
   cabin.receiveShadow = true;
   chassisGroup.add(cabin);
 
-  // Roof
   const roof = new THREE.Mesh(new THREE.BoxGeometry(1.76, 0.09, 1.6), paintMat);
   roof.position.set(0, 2.05, 0.55);
   roof.castShadow = true;
   roof.receiveShadow = true;
   chassisGroup.add(roof);
 
-  // Roof rails
   [-0.78, 0.78].forEach((x) => {
     const rail = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.08, 1.55), darkMat);
     rail.position.set(x, 2.14, 0.55);
     chassisGroup.add(rail);
   });
 
-  // Roll bar
   [-0.7, 0.7].forEach((x) => {
     const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.05, 8), darkMat);
     bar.position.set(x, 1.5, 1.42);
@@ -945,7 +1175,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   rollTop.position.set(0, 2.02, 1.42);
   chassisGroup.add(rollTop);
 
-  // Windshield frame
   [-0.85, 0.85].forEach((x) => {
     const post = new THREE.Mesh(new THREE.BoxGeometry(0.07, 1.0, 0.07), darkMat);
     post.position.set(x, 1.5, -0.42);
@@ -970,14 +1199,12 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(sw);
   });
 
-  // Door handles
   [-1, 1].forEach((s) => {
     const h = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.06, 0.28), chromeMat);
     h.position.set(s * 0.9, 1.2, 0.35);
     chassisGroup.add(h);
   });
 
-  // Side steps
   [-1, 1].forEach((s) => {
     const step = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.08, 1.6), darkMat);
     step.position.set(s * 1.0, 0.75, 0.35);
@@ -985,19 +1212,16 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(step);
   });
 
-  // Front grill frame
   const grillFrame = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.5, 0.1), paintDarkMat);
   grillFrame.position.set(0, 1.06, -1.79);
   chassisGroup.add(grillFrame);
 
-  // 7 slats
   for (let i = -3; i <= 3; i++) {
     const slat = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.4, 0.06), darkMat);
     slat.position.set(i * 0.2, 1.06, -1.82);
     chassisGroup.add(slat);
   }
 
-  // Headlights
   [-0.55, 0.55].forEach((x) => {
     const hl = new THREE.Mesh(new THREE.SphereGeometry(0.14, 14, 14), headMat);
     hl.position.set(x, 1.08, -1.85);
@@ -1008,20 +1232,17 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(ring);
   });
 
-  // Turn signals
   [-0.75, 0.75].forEach((x) => {
     const t = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.1, 0.06), amberMat);
     t.position.set(x, 0.92, -1.83);
     chassisGroup.add(t);
   });
 
-  // Bumper front
   const bumperF = new THREE.Mesh(new THREE.BoxGeometry(1.88, 0.16, 0.28), chromeMat);
   bumperF.position.set(0, 0.78, -1.98);
   bumperF.castShadow = true;
   chassisGroup.add(bumperF);
 
-  // Tow hooks
   [-0.55, 0.55].forEach((x) => {
     const hook = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.02, 6, 10), chromeMat);
     hook.position.set(x, 0.72, -2.08);
@@ -1029,20 +1250,17 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(hook);
   });
 
-  // Bumper rear
   const bumperR = new THREE.Mesh(new THREE.BoxGeometry(1.88, 0.16, 0.28), chromeMat);
   bumperR.position.set(0, 0.78, 2.02);
   bumperR.castShadow = true;
   chassisGroup.add(bumperR);
 
-  // Taillights
   [-0.65, 0.65].forEach((x) => {
     const tl = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.24, 0.08), tailMat);
     tl.position.set(x, 1.12, 1.9);
     chassisGroup.add(tl);
   });
 
-  // License plate
   const plate = new THREE.Mesh(
     new THREE.BoxGeometry(0.45, 0.18, 0.03),
     new THREE.MeshStandardMaterial({ color: 0xf5f5f5, roughness: 0.4 })
@@ -1050,7 +1268,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   plate.position.set(0, 0.85, 2.17);
   chassisGroup.add(plate);
 
-  // Spare tire
   const spareGrp = new THREE.Group();
   const spareTire = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.44, 0.24, 22), tireMat);
   spareTire.rotation.x = Math.PI / 2;
@@ -1062,7 +1279,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   spareGrp.traverse(c => { if (c.isMesh) c.castShadow = true; });
   chassisGroup.add(spareGrp);
 
-  // Mirrors
   [-1, 1].forEach((s) => {
     const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.28, 6), darkMat);
     arm.position.set(s * 0.92, 1.75, -0.30);
@@ -1078,7 +1294,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     chassisGroup.add(glass);
   });
 
-  // Snorkel
   const snorkel = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 1.3, 10), darkMat);
   snorkel.position.set(-0.82, 1.6, -0.85);
   snorkel.rotation.z = 0.06;
@@ -1088,19 +1303,16 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   snorkelHead.position.set(-0.82, 2.28, -0.85);
   chassisGroup.add(snorkelHead);
 
-  // Antenna
   const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.006, 1.4, 6), darkMat);
   antenna.position.set(0.65, 1.35, 1.65);
   antenna.rotation.z = -0.15;
   chassisGroup.add(antenna);
 
-  // Exhaust
   const exhaust = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.6, 10), chromeMat);
   exhaust.rotation.z = Math.PI / 2;
   exhaust.position.set(0.65, 0.7, 2.1);
   chassisGroup.add(exhaust);
 
-  /* ---------------- WHEELS ---------------- */
   const wheels = [];
 
   function createWheel(isFront) {
@@ -1163,7 +1375,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   const wRL = createWheel(false); wRL.position.set(-TRACK, 0.5,  WB); jeep.add(wRL); wheels.push(wRL);
   const wRR = createWheel(false); wRR.position.set( TRACK, 0.5,  WB); jeep.add(wRR); wheels.push(wRR);
 
-  // Headlight beams
   const beam1 = new THREE.SpotLight(0xffe9a8, 0.8, 30, Math.PI / 6, 0.5, 1.5);
   beam1.position.set(-0.55, 1.08, -1.9);
   beam1.target.position.set(-0.55, 0, -8);
@@ -1240,6 +1451,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     bounce: 0,
     accelPitch: 0,
     rollAngle: 0,
+    rpm: 0,
   };
 
   /* ---------------- INPUT ---------------- */
@@ -1372,6 +1584,10 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     const targetRoll = -car.steer * Math.min(0.15, speedMag * 0.008);
     car.rollAngle += (targetRoll - car.rollAngle) * Math.min(1, 5 * dt);
 
+    // RPM simulasi: berbanding dgn throttle + speed
+    const targetRpm = Math.min(1, (input.gas ? 0.35 : 0) + speedMag / MAX_SPEED * 0.85);
+    car.rpm += (targetRpm - car.rpm) * Math.min(1, 5 * dt);
+
     jeep.position.set(car.x, 0, car.z);
     jeep.rotation.y = car.angle;
 
@@ -1440,6 +1656,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   /* ---------------- HUD ---------------- */
   let lastSpdKmh = -1;
   let lastGear = '';
+  let lastRpmW = -1;
 
   function updateHUD() {
     const kmh = Math.round(Math.abs(car.speed) * 3.6);
@@ -1451,6 +1668,15 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     const pct = Math.min(1, Math.abs(car.speed) / MAX_SPEED);
     speedFill.style.strokeDashoffset = String(220 - pct * 220);
 
+    // warna speed fill ganti berdasarkan kecepatan
+    if (pct > 0.8) {
+      speedFill.style.stroke = '#f87171';
+    } else if (pct > 0.5) {
+      speedFill.style.stroke = '#fde68a';
+    } else {
+      speedFill.style.stroke = '#6ba3f7';
+    }
+
     let gear;
     if (car.speed < -0.5) gear = 'R';
     else if (Math.abs(car.speed) < 0.4) gear = 'N';
@@ -1459,6 +1685,13 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       gearBox.textContent = gear;
       gearBox.setAttribute('data-state', gear);
       lastGear = gear;
+    }
+
+    // RPM bar (update kalau beda > 1%)
+    const rpmW = Math.round(car.rpm * 100);
+    if (rpmW !== lastRpmW) {
+      rpmFill.style.width = rpmW + '%';
+      lastRpmW = rpmW;
     }
   }
 
