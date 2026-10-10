@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<meta name="theme-color" content="#eaf4ff" />
+<meta name="description" content="Fortech Arcade Hub — kumpulan mini game mobile: Snake, 2048, Breakout. Dibuat oleh FortechDev." />
+<meta name="author" content="FortechDev" />
+<title>Fortech Arcade Hub — by FortechDev</title>
+
+<style>
+/* =========================================================
+   FORTECH ARCADE HUB — Standalone Stylesheet
+   Theme: Soft Blue Gradient → White
+   Mobile-first · Elegant · No external deps
+   ========================================================= */
+
+/* ---------- Design Tokens ---------- */
+:root{
+  --blue-050:#f3f8ff;
+  --blue-100:#e2eefe;
+  --blue-200:#c5ddfd;
+  --blue-300:#9cc3fb;
+  --blue-400:#6ba3f7;
+  --blue-500:#3b82f6;
+  --blue-600:#2563eb;
+  --blue-700:#1d4ed8;
+  --blue-800:#1e3f8f;
+  --ink:#0d2949;
+  --ink-2:#3c5f85;
+  --ink-3:#7a93ad;
+  --line:rgba(59,130,246,.16);
+  --glass:rgba(255,255,255,.72);
+  --glass-2:rgba(255,255,255,.55);
+  --radius-s:12px;
+  --radius-m:18px;
+  --radius-l:26px;
+  --shadow-s:0 4px 14px rgba(29,78,216,.08);
+  --shadow-m:0 12px 32px rgba(29,78,216,.13);
+  --shadow-l:0 24px 60px rgba(29,78,216,.20);
+  --ease:cubic-bezier(.22,.9,.28,1);
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-l:env(safe-area-inset-left,0px);
+  --safe-r:env(safe-area-inset-right,0px);
+}
+
+/* ---------- Reset ---------- */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,'SF Pro Display','Helvetica Neue',Arial,sans-serif;
+  background:linear-gradient(165deg,#eaf4ff 0%,#f5faff 42%,#ffffff 100%);
+  background-attachment:fixed;
+  color:var(--ink);
+  min-height:100vh;
+  min-height:100dvh;
+  overflow-x:hidden;
+  position:relative;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overscroll-behavior-y:none;
+}
+img,svg,video,canvas{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+
+/* =========================================================
+   VIDEO BACKGROUND
+   ========================================================= */
+.bg-video{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:-3;
+  pointer-events:none;
+  filter:saturate(1.05) brightness(1.02);
+}
+.bg-overlay{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.72) 0%, rgba(255,255,255,.35) 45%, rgba(255,255,255,.15) 100%),
+    linear-gradient(165deg,
+      rgba(226,238,254,.88) 0%,
+      rgba(240,247,255,.82) 35%,
+      rgba(255,255,255,.90) 70%,
+      rgba(255,255,255,.96) 100%);
+  backdrop-filter:blur(3px) saturate(1.1);
+  -webkit-backdrop-filter:blur(3px) saturate(1.1);
+}
+.bg-grain{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.35;
+  background-image:radial-gradient(rgba(59,130,246,.10) 1px, transparent 1px);
+  background-size:26px 26px;
+  mask-image:radial-gradient(ellipse at 50% 30%, #000 0%, transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse at 50% 30%, #000 0%, transparent 78%);
+}
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+.shell{
+  max-width:1100px;
+  margin:0 auto;
+  padding:calc(var(--safe-t) + 26px) calc(var(--safe-r) + 20px) calc(var(--safe-b) + 40px) calc(var(--safe-l) + 20px);
+  position:relative;
+  z-index:1;
+}
+
+/* ---------- Topbar ---------- */
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:10px 14px;
+  border-radius:var(--radius-m);
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:var(--shadow-s);
+  backdrop-filter:blur(14px) saturate(1.4);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);
+  margin-bottom:26px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  min-width:0;
+}
+.brand-mark{
+  width:38px;height:38px;
+  border-radius:12px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--blue-400),var(--blue-700));
+  box-shadow:0 6px 16px rgba(37,99,235,.35), inset 0 1px 0 rgba(255,255,255,.4);
+  flex:none;
+}
+.brand-mark svg{
+  width:20px;height:20px;
+  stroke:#fff;fill:none;stroke-width:2.1;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.brand-text{min-width:0}
+.brand-title{
+  font-size:15px;font-weight:800;letter-spacing:-.2px;
+  color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.brand-sub{
+  font-size:11px;color:var(--ink-3);font-weight:600;
+  letter-spacing:.4px;text-transform:uppercase;
+}
+.chip{
+  font-size:11px;font-weight:700;letter-spacing:.5px;
+  padding:7px 13px;border-radius:999px;
+  background:linear-gradient(135deg,rgba(59,130,246,.14),rgba(59,130,246,.06));
+  color:var(--blue-700);
+  border:1px solid rgba(59,130,246,.20);
+  white-space:nowrap;flex:none;
+}
+
+/* ---------- Hero ---------- */
+.hero{
+  text-align:center;
+  padding:26px 6px 40px;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+  padding:8px 16px;border-radius:999px;
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,.85);
+  color:var(--blue-700);
+  box-shadow:var(--shadow-s);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  margin-bottom:20px;
+  animation:fadeUp .7s var(--ease) both;
+}
+.hero-badge .dot{
+  width:7px;height:7px;border-radius:50%;
+  background:linear-gradient(135deg,#4ade80,#22c55e);
+  box-shadow:0 0 0 3px rgba(34,197,94,.18);
+  animation:pulse 2s ease-in-out infinite;
+}
+.hero h1{
+  font-size:clamp(32px,9vw,58px);
+  line-height:1.05;
+  letter-spacing:-1.4px;
+  font-weight:800;
+  color:var(--ink);
+  margin-bottom:16px;
+  animation:fadeUp .7s .06s var(--ease) both;
+}
+.hero h1 .grad{
+  background:linear-gradient(120deg,var(--blue-500) 0%,var(--blue-700) 50%,var(--blue-400) 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  display:inline-block;
+}
+.hero p{
+  max-width:520px;
+  margin:0 auto;
+  font-size:clamp(14px,3.6vw,16.5px);
+  color:var(--ink-2);
+  line-height:1.7;
+  animation:fadeUp .7s .12s var(--ease) both;
+}
+.hero-stats{
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  margin-top:26px;
+  animation:fadeUp .7s .18s var(--ease) both;
+}
+.stat{
+  padding:9px 16px;border-radius:14px;
+  background:var(--glass-2);
+  border:1px solid rgba(255,255,255,.7);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  box-shadow:var(--shadow-s);
+  text-align:center;
+}
+.stat b{display:block;font-size:16px;font-weight:800;color:var(--blue-700);line-height:1.2}
+.stat span{
+  font-size:10.5px;font-weight:600;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--ink-3);
+}
+
+/* ---------- Section head ---------- */
+.section-head{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:12px;margin:0 4px 18px;
+}
+.section-head h2{
+  font-size:19px;font-weight:800;letter-spacing:-.4px;color:var(--ink);
+}
+.section-head span{font-size:12px;color:var(--ink-3);font-weight:600}
+
+/* ---------- Grid ---------- */
+.grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:16px;
+  margin-bottom:36px;
+}
+@media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:940px){.grid{grid-template-columns:repeat(3,1fr)}}
+
+/* ---------- Card ---------- */
+.card{
+  position:relative;
+  display:block;
+  border-radius:var(--radius-l);
+  padding:22px;
+  background:linear-gradient(160deg,rgba(255,255,255,.86),rgba(255,255,255,.62));
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:var(--shadow-m);
+  backdrop-filter:blur(16px) saturate(1.4);
+  -webkit-backdrop-filter:blur(16px) saturate(1.4);
+  overflow:hidden;
+  transition:transform .45s var(--ease), box-shadow .45s var(--ease), border-color .45s var(--ease);
+  animation:fadeUp .7s var(--ease) both;
+  will-change:transform;
+  isolation:isolate;
+}
+.card:nth-child(1){animation-delay:.20s}
+.card:nth-child(2){animation-delay:.28s}
+.card:nth-child(3){animation-delay:.36s}
+
+.card::before{
+  content:"";
+  position:absolute;inset:0;
+  background:radial-gradient(80% 60% at 20% 0%, var(--accent-soft,rgba(59,130,246,.18)) 0%, transparent 65%);
+  opacity:0;
+  transition:opacity .5s var(--ease);
+  z-index:-1;
+}
+.card::after{
+  content:"";
+  position:absolute;
+  top:-40%;right:-30%;
+  width:180px;height:180px;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--accent,rgba(59,130,246,.30)) 0%, transparent 70%);
+  opacity:.35;
+  filter:blur(6px);
+  transition:opacity .5s var(--ease), transform .6s var(--ease);
+  z-index:-1;
+}
+.card:active{transform:scale(.978)}
+@media(hover:hover){
+  .card:hover{
+    transform:translateY(-6px);
+    box-shadow:var(--shadow-l);
+    border-color:rgba(255,255,255,1);
+  }
+  .card:hover::before{opacity:1}
+  .card:hover::after{opacity:.6;transform:scale(1.15) translate(-6px,6px)}
+}
+
+.card-top{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;
+}
+.card-icon{
+  width:56px;height:56px;
+  border-radius:18px;
+  display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--accent-a,#6ba3f7),var(--accent-b,#1d4ed8));
+  box-shadow:0 10px 22px -6px var(--accent-shadow,rgba(37,99,235,.55)), inset 0 1px 0 rgba(255,255,255,.45);
+  transition:transform .5s var(--ease);
+}
+.card:active .card-icon{transform:rotate(-6deg) scale(.94)}
+@media(hover:hover){.card:hover .card-icon{transform:rotate(-8deg) scale(1.06)}}
+.card-icon svg{
+  width:26px;height:26px;
+  stroke:#fff;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.card-tag{
+  font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+  padding:6px 11px;border-radius:999px;
+  background:rgba(255,255,255,.75);
+  color:var(--blue-700);
+  border:1px solid rgba(59,130,246,.18);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
+.card h3{
+  font-size:19px;font-weight:800;letter-spacing:-.3px;
+  margin-bottom:7px;color:var(--ink);
+}
+.card p{
+  font-size:13.5px;line-height:1.6;color:var(--ink-2);
+  margin-bottom:18px;
+}
+.card-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.card-meta{
+  display:flex;align-items:center;gap:7px;
+  font-size:11.5px;font-weight:700;color:var(--ink-3);
+}
+.card-meta svg{
+  width:13px;height:13px;
+  stroke:currentColor;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.card-play{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:13px;font-weight:800;
+  padding:10px 16px;border-radius:12px;
+  color:#fff;
+  background:linear-gradient(135deg,var(--accent-a,#6ba3f7),var(--accent-b,#1d4ed8));
+  box-shadow:0 8px 18px -6px var(--accent-shadow,rgba(37,99,235,.6));
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+}
+.card:active .card-play{transform:scale(.95)}
+.card-play svg{
+  width:14px;height:14px;
+  stroke:#fff;fill:none;stroke-width:2.4;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* accent variants */
+.card[data-accent="snake"]{
+  --accent-a:#4ade80; --accent-b:#0ea56b;
+  --accent:rgba(34,197,94,.45);
+  --accent-soft:rgba(34,197,94,.18);
+  --accent-shadow:rgba(14,165,107,.55);
+}
+.card[data-accent="g2048"]{
+  --accent-a:#6ba3f7; --accent-b:#1d4ed8;
+  --accent:rgba(59,130,246,.5);
+  --accent-soft:rgba(59,130,246,.18);
+  --accent-shadow:rgba(29,78,216,.55);
+}
+.card[data-accent="breakout"]{
+  --accent-a:#f0a95c; --accent-b:#d94f6b;
+  --accent:rgba(240,120,90,.45);
+  --accent-soft:rgba(240,140,90,.18);
+  --accent-shadow:rgba(217,79,107,.5);
+}
+
+/* ---------- Footer ---------- */
+.footer{
+  text-align:center;
+  padding:26px 10px 8px;
+  font-size:12px;
+  color:var(--ink-3);
+  font-weight:600;
+}
+.footer b{color:var(--blue-700);font-weight:800}
+
+/* ---------- Animations ---------- */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.55;transform:scale(.82)}
+}
+@keyframes ripple{
+  from{transform:scale(0);opacity:1}
+  to{transform:scale(1);opacity:0}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     VIDEO BACKGROUND
+     ========================= -->
+<video class="bg-video" autoplay muted loop playsinline preload="auto">
+  <source src="./wp.mp4" type="video/mp4" />
+  <source src="wp.mp4" type="video/mp4" />
+  <source src="/wp.mp4" type="video/mp4" />
+</video>
+<div class="bg-overlay"></div>
+<div class="bg-grain"></div>
+
+<!-- =========================
+     MAIN CONTENT
+     ========================= -->
+<main class="shell">
+
+  <!-- ===== Topbar ===== -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2 4 6v6c0 5 3.4 9.2 8 10 4.6-.8 8-5 8-10V6l-8-4Z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-title">Fortech Arcade</div>
+        <div class="brand-sub">by FortechDev</div>
+      </div>
+    </div>
+    <span class="chip">v1.0</span>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <span class="hero-badge"><span class="dot"></span> Online &amp; Siap Main</span>
+    <h1>Tiga Game Klasik.<br><span class="grad">Satu Sentuhan.</span></h1>
+    <p>Dimainkan langsung di browser HP. Tanpa install, tanpa loading lama, tanpa ribet. Pilih game, geser jari, mainkan.</p>
+
+    <div class="hero-stats">
+      <div class="stat"><b>3</b><span>Game</span></div>
+      <div class="stat"><b>60</b><span>FPS</span></div>
+      <div class="stat"><b>0</b><span>Install</span></div>
+    </div>
+  </section>
+
+  <!-- ===== Section Heading ===== -->
+  <div class="section-head">
+    <h2>Pilih Game</h2>
+    <span>3 tersedia</span>
+  </div>
+
+  <!-- ===== Game Grid ===== -->
+  <section class="grid">
+
+    <!-- ============ SNAKE ============ -->
+    <a class="card" href="snake.html" data-accent="snake">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 17c0-2 1.5-3.5 3.5-3.5H13c2 0 3.5-1.5 3.5-3.5S15 6.5 13 6.5H8"/>
+            <circle cx="19" cy="17" r="2.5"/>
+            <circle cx="6" cy="17" r="0.6" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="card-tag">Arcade</span>
+      </div>
+      <h3>Neon Snake</h3>
+      <p>Kendalikan ular, makan apel, dan jangan tabrak ekor sendiri. Makin panjang, makin cepat.</p>
+      <div class="card-foot">
+        <span class="card-meta">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 6v6l4 2"/>
+            <circle cx="12" cy="12" r="9"/>
+          </svg>
+          Swipe &amp; D-Pad
+        </span>
+        <span class="card-play">
+          Main
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- ============ 2048 ============ -->
+    <a class="card" href="g2048.html" data-accent="g2048">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7.5" height="7.5" rx="2"/>
+            <rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/>
+            <rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/>
+            <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>
+          </svg>
+        </div>
+        <span class="card-tag">Puzzle</span>
+      </div>
+      <h3>2048 Merge</h3>
+      <p>Geser ubin, gabungkan angka yang sama, dan raih ubin 2048. Gampang dimulai, susah ditamatkan.</p>
+      <div class="card-foot">
+        <span class="card-meta">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 6v6l4 2"/>
+            <circle cx="12" cy="12" r="9"/>
+          </svg>
+          Swipe 4 Arah
+        </span>
+        <span class="card-play">
+          Main
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- ============ BREAKOUT ============ -->
+    <a class="card" href="breakout.html" data-accent="breakout">
+      <div class="card-top">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="4" width="5.5" height="3.2" rx="1"/>
+            <rect x="9.2" y="4" width="5.5" height="3.2" rx="1"/>
+            <rect x="15.5" y="4" width="5.5" height="3.2" rx="1"/>
+            <rect x="3" y="9" width="5.5" height="3.2" rx="1"/>
+            <rect x="9.2" y="9" width="5.5" height="3.2" rx="1"/>
+            <rect x="15.5" y="9" width="5.5" height="3.2" rx="1"/>
+            <rect x="8" y="18.5" width="8" height="2.6" rx="1.3"/>
+            <circle cx="12" cy="15" r="1.6"/>
+          </svg>
+        </div>
+        <span class="card-tag">Refleks</span>
+      </div>
+      <h3>Brick Breaker</h3>
+      <p>Pantulkan bola, hancurkan semua bata. Gerakkan paddle dengan jari, jangan sampai bola jatuh.</p>
+      <div class="card-foot">
+        <span class="card-meta">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 6v6l4 2"/>
+            <circle cx="12" cy="12" r="9"/>
+          </svg>
+          Sentuh &amp; Geser
+        </span>
+        <span class="card-play">
+          Main
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </a>
+
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    Dibuat dengan <b>Fortech Executor</b> · © 2026 FortechDev
+  </footer>
+
+</main>
+
+<!-- =========================
+     SCRIPTS
+     ========================= -->
+<script>
+/* =========================================================
+   FORTECH ARCADE HUB — Home interactions
+   ========================================================= */
+(function () {
+  'use strict';
+
+  /* ---------------- Ripple feedback on cards ---------------- */
+  const cards = document.querySelectorAll('.card');
+
+  cards.forEach((card) => {
+    card.addEventListener('pointerdown', (e) => {
+      const rect = card.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      const size = Math.max(rect.width, rect.height) * 1.4;
+
+      ripple.style.cssText = `
+        position:absolute;
+        left:${e.clientX - rect.left - size / 2}px;
+        top:${e.clientY - rect.top - size / 2}px;
+        width:${size}px;
+        height:${size}px;
+        border-radius:50%;
+        background:radial-gradient(circle, rgba(59,130,246,.28) 0%, rgba(59,130,246,0) 70%);
+        transform:scale(0);
+        opacity:1;
+        pointer-events:none;
+        z-index:0;
+        animation:ripple .6s cubic-bezier(.22,.9,.28,1) forwards;
+      `;
+
+      card.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  });
+
+  /* ---------------- Subtle parallax tilt (desktop only) ---------------- */
+  const isFine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+  if (isFine) {
+    cards.forEach((card) => {
+      card.addEventListener('pointermove', (e) => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+
+        card.style.transform =
+          `translateY(-6px) rotateX(${(-py * 5).toFixed(2)}deg) rotateY(${(px * 5).toFixed(2)}deg)`;
+        card.style.transformStyle = 'preserve-3d';
+      });
+
+      card.addEventListener('pointerleave', () => {
+        card.style.transform = '';
+      });
+    });
+  }
+
+  /* ---------------- Prefetch game pages ---------------- */
+  const prefetch = () => {
+    document.querySelectorAll('a.card').forEach((a) => {
+      const href = a.getAttribute('href');
+      if (!href) return;
+
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = href;
+      document.head.appendChild(link);
+    });
+  };
+
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(prefetch, { timeout: 2000 });
+  } else {
+    setTimeout(prefetch, 1200);
+  }
+
+  /* ---------------- Video autoplay fallback ---------------- */
+  const video = document.querySelector('.bg-video');
+
+  if (video) {
+    const tryPlay = () => {
+      const p = video.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(() => {
+          const resume = () => {
+            video.play().catch(() => {});
+            window.removeEventListener('touchstart', resume);
+            window.removeEventListener('click', resume);
+          };
+          window.addEventListener('touchstart', resume, { once: true, passive: true });
+          window.addEventListener('click', resume, { once: true });
+        });
+      }
+    };
+
+    if (video.readyState >= 2) tryPlay();
+    else video.addEventListener('loadeddata', tryPlay, { once: true });
+  }
+
+  /* ---------------- Prevent double-tap zoom on iOS ---------------- */
+  let lastTouch = 0;
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouch < 320) e.preventDefault();
+    lastTouch = now;
+  }, { passive: false });
+
+  /* ---------------- Prevent drag on media ---------------- */
+  document.querySelectorAll('img, video, svg').forEach((el) => {
+    el.setAttribute('draggable', 'false');
+  });
+
+})();
+</script>
+</body>
+</html>
