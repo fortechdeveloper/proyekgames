@@ -15,10 +15,6 @@
 />
 
 <style>
-/* =========================================================
-   GAMEHUBFORTECHDEV — Bento Glass Layout
-   ========================================================= */
-
 :root{
   --glass:rgba(255,255,255,.12);
   --glass-border:rgba(255,255,255,.25);
@@ -52,9 +48,6 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 a{color:inherit;text-decoration:none}
 i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 
-/* =========================================================
-   VIDEO BACKGROUND
-   ========================================================= */
 .bg-video{
   position:fixed;inset:0;
   width:100%;height:100%;
@@ -72,9 +65,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   background:linear-gradient(180deg, rgba(0,0,0,.10) 0%, transparent 30%, transparent 65%, rgba(0,0,0,.35) 100%);
 }
 
-/* =========================================================
-   LAYOUT
-   ========================================================= */
 .shell{
   max-width:780px;
   margin:0 auto;
@@ -104,9 +94,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 }
 .glass > *{position:relative;z-index:1}
 
-/* =========================================================
-   TOPBAR
-   ========================================================= */
 .topbar{
   display:flex;align-items:center;gap:11px;
   padding:10px 14px;
@@ -131,9 +118,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35);
 }
 
-/* =========================================================
-   HERO
-   ========================================================= */
 .hero{
   padding:8px 4px 26px;
   text-align:center;
@@ -165,23 +149,16 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   animation:fadeUp .6s .06s var(--ease) both;
 }
 
-/* =========================================================
-   BENTO GRID
-   ========================================================= */
 .bento{
   display:grid;
   grid-template-columns:repeat(2, minmax(0, 1fr));
   gap:10px;
   margin-bottom:24px;
-  counter-reset:gamenum;
 }
 @media(min-width:640px){
   .bento{gap:14px}
 }
 
-/* =========================================================
-   CARD
-   ========================================================= */
 .card{
   position:relative;
   display:flex;
@@ -211,11 +188,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 .card:nth-child(4){animation-delay:.18s}
 .card:nth-child(5){animation-delay:.22s}
 .card:nth-child(6){animation-delay:.26s}
-.card:nth-child(7){animation-delay:.30s}
-.card:nth-child(8){animation-delay:.34s}
-.card:nth-child(9){animation-delay:.38s}
 
-/* Specular top */
 .card::before{
   content:"";
   position:absolute;left:0;right:0;top:0;
@@ -223,7 +196,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   background:linear-gradient(180deg, rgba(255,255,255,.28) 0%, rgba(255,255,255,.06) 55%, transparent 100%);
   pointer-events:none;z-index:0;
 }
-/* Accent glow */
 .card::after{
   content:"";
   position:absolute;top:-40%;right:-30%;
@@ -248,29 +220,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   .card:hover::after{opacity:.85;transform:scale(1.15) translate(-6px,6px)}
 }
 
-/* ---- Number watermark (auto increment) ---- */
-.card-num{
-  position:absolute;
-  right:6px;bottom:-6px;
-  font-size:82px;
-  font-weight:900;
-  line-height:1;
-  letter-spacing:-.06em;
-  color:rgba(255,255,255,.07);
-  pointer-events:none;
-  z-index:0;
-  font-variant-numeric:tabular-nums;
-  transition:color .5s var(--ease), transform .6s var(--ease);
-}
-.card-num::before{
-  counter-increment:gamenum;
-  content:counter(gamenum, decimal-leading-zero);
-}
-@media(hover:hover){
-  .card:hover .card-num{color:rgba(255,255,255,.11)}
-}
-
-/* ---- Icon ---- */
 .card-icon{
   width:44px;height:44px;
   border-radius:14px;
@@ -289,7 +238,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 .card:active .card-icon{transform:rotate(-6deg) scale(.94)}
 @media(hover:hover){.card:hover .card-icon{transform:rotate(-8deg) scale(1.06)}}
 
-/* ---- Body ---- */
 .card-body{
   display:flex;
   flex-direction:column;
@@ -316,7 +264,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   overflow:hidden;
 }
 
-/* ---- Play ---- */
 .card-play{
   display:inline-flex;align-items:center;gap:6px;
   font-size:11px;font-weight:800;
@@ -338,9 +285,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   .card:hover .card-play .fa-arrow-right{transform:translateX(3px)}
 }
 
-/* =========================================================
-   FEATURED (card pertama)
-   ========================================================= */
 .card:first-child{
   grid-column:1 / -1;
   flex-direction:row;
@@ -351,12 +295,9 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   background:rgba(255,255,255,.16);
 }
 .card:first-child::after{
-  width:280px;
-  height:280px;
-  top:-50%;
-  right:-20%;
-  opacity:.70;
-  filter:blur(28px);
+  width:280px;height:280px;
+  top:-50%;right:-20%;
+  opacity:.70;filter:blur(28px);
 }
 .card:first-child .card-icon{
   width:72px;height:72px;
@@ -364,26 +305,14 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 }
 .card:first-child .card-icon i{font-size:30px}
 .card:first-child h3{font-size:19px;margin-bottom:2px}
-.card:first-child p{font-size:12.5px;-webkit-line-clamp:2}
+.card:first-child p{font-size:12.5px}
 .card:first-child .card-play{
   font-size:12px;
   padding:9px 18px;
   border-radius:11px;
   margin-top:6px;
 }
-.card:first-child .card-num{
-  font-size:118px;
-  right:10px;
-  bottom:-10px;
-  color:rgba(255,255,255,.09);
-}
-@media(hover:hover){
-  .card:first-child:hover .card-num{color:rgba(255,255,255,.14)}
-}
 
-/* =========================================================
-   TABLET+
-   ========================================================= */
 @media(min-width:640px){
   .card{padding:18px;border-radius:var(--radius-l);min-height:172px;gap:13px}
   .card-icon{width:50px;height:50px;border-radius:15px}
@@ -391,7 +320,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   .card h3{font-size:16px}
   .card p{font-size:12.5px}
   .card-play{font-size:11.5px;padding:8px 15px;border-radius:11px}
-  .card-num{font-size:96px;right:8px}
 
   .card:first-child{padding:26px;gap:22px;min-height:160px;border-radius:24px}
   .card:first-child .card-icon{width:88px;height:88px;border-radius:24px}
@@ -399,12 +327,8 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   .card:first-child h3{font-size:23px}
   .card:first-child p{font-size:13.5px}
   .card:first-child .card-play{font-size:13px;padding:11px 20px;border-radius:12px}
-  .card:first-child .card-num{font-size:150px;right:16px;bottom:-16px}
 }
 
-/* =========================================================
-   ACCENT VARIANTS
-   ========================================================= */
 .card[data-accent="snake"]{
   --accent-a:#4ade80; --accent-b:#0ea56b;
   --accent:rgba(34,197,94,.55);
@@ -415,30 +339,27 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   --accent:rgba(107,163,247,.60);
   --accent-shadow:rgba(29,78,216,.70);
 }
-.card[data-accent="breakout"]{
-  --accent-a:#f0a95c; --accent-b:#d94f6b;
-  --accent:rgba(240,140,90,.55);
-  --accent-shadow:rgba(217,79,107,.65);
+.card[data-accent="cyan"]{
+  --accent-a:#22d3ee; --accent-b:#0e7490;
+  --accent:rgba(34,211,238,.55);
+  --accent-shadow:rgba(14,116,144,.68);
 }
 .card[data-accent="purple"]{
   --accent-a:#a78bfa; --accent-b:#6d28d9;
   --accent:rgba(139,92,246,.55);
   --accent-shadow:rgba(109,40,217,.68);
 }
-.card[data-accent="cyan"]{
-  --accent-a:#22d3ee; --accent-b:#0e7490;
-  --accent:rgba(34,211,238,.55);
-  --accent-shadow:rgba(14,116,144,.68);
-}
 .card[data-accent="pink"]{
   --accent-a:#f472b6; --accent-b:#be185d;
   --accent:rgba(244,114,182,.55);
   --accent-shadow:rgba(190,24,93,.65);
 }
+.card[data-accent="orange"]{
+  --accent-a:#f0a95c; --accent-b:#d94f6b;
+  --accent:rgba(240,140,90,.55);
+  --accent-shadow:rgba(217,79,107,.65);
+}
 
-/* =========================================================
-   FOOTER
-   ========================================================= */
 .footer{
   text-align:center;
   padding:20px 10px 4px;
@@ -449,9 +370,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   text-shadow:0 1px 2px rgba(0,0,0,.4);
 }
 
-/* =========================================================
-   ANIMATIONS
-   ========================================================= */
 @keyframes fadeUp{
   from{opacity:0;transform:translateY(14px)}
   to{opacity:1;transform:translateY(0)}
@@ -501,11 +419,25 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
     <p>Pilih game favoritmu dan langsung mainkan di browser.</p>
   </section>
 
-  <!-- Bento grid — game pertama otomatis jadi featured -->
   <section class="bento">
 
+    <!-- ============ JEEP 3D (FEATURED) ============ -->
+    <a class="card" href="jeep3d.html" data-accent="cyan">
+      <div class="card-icon">
+        <i class="fa-solid fa-truck-monster" aria-hidden="true"></i>
+      </div>
+      <div class="card-body">
+        <h3>Off-Road Jeep 3D</h3>
+        <p>Bawa jeep 3D keliling map off-road dengan physics realistis.</p>
+        <span class="card-play">
+          Main
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </span>
+      </div>
+    </a>
+
+    <!-- ============ SNAKE ============ -->
     <a class="card" href="snake.html" data-accent="snake">
-      <span class="card-num" aria-hidden="true"></span>
       <div class="card-icon">
         <i class="fa-solid fa-gamepad" aria-hidden="true"></i>
       </div>
@@ -519,29 +451,14 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
       </div>
     </a>
 
+    <!-- ============ 2048 ============ -->
     <a class="card" href="g2048.html" data-accent="g2048">
-      <span class="card-num" aria-hidden="true"></span>
       <div class="card-icon">
         <i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>
       </div>
       <div class="card-body">
         <h3>2048 Merge</h3>
         <p>Gabungkan angka yang sama sampai dapat 2048.</p>
-        <span class="card-play">
-          Main
-          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-        </span>
-      </div>
-    </a>
-
-    <a class="card" href="breakout.html" data-accent="breakout">
-      <span class="card-num" aria-hidden="true"></span>
-      <div class="card-icon">
-        <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-      </div>
-      <div class="card-body">
-        <h3>Brick Breaker</h3>
-        <p>Pantulkan bola, hancurkan semua bata.</p>
         <span class="card-play">
           Main
           <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
